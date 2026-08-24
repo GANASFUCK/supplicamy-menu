@@ -1,0 +1,5050 @@
+<!doctype html>
+<html lang="it">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <title>Supplicamy - Menu</title>
+    <meta name="description" content="Suppli artigianali, timballi e pale 100% lievito madre — Viale Parioli 69, Roma">
+    <meta property="og:title" content="Supplicamy - Menu">
+    <meta property="og:description" content="Segna i tuoi suppli Supplicamy e componi l'ordine.">
+    <meta name="theme-color" content="#EA6F23">
+    <link rel="icon" type="image/svg+xml" href="img/logo-supplicamy-blob.svg">
+    <link rel="apple-touch-icon" href="img/logo-supplicamy-blob.svg">
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,125,700..900;1,125,700..900&family=Mr+Dafoe&display=swap");
+
+      /* Obviously Demo taglio WIDE (OH no Type Co) — V2: subset woff2 EMBEDDATO, cosi il web = l'anteprima.
+         local() prima di url(): chi ha la font installata non scarica niente.
+         I tagli Demo hanno solo " ,.0-9 A-Z a-z" (66 glifi): U, EUR, /, · cadono su Archivo — come gia in V1.
+         LICENZA: font demo. Prima di pubblicare serve la licenza web di OH no Type Co (o il kit Adobe Fonts). */
+      /* Obviously Wide: istanze statiche dalla Obviously Variable (set completo: Ù Ì Ò € / ·), woff2 PRIMA di local() così web = anteprima ovunque */
+      @font-face { font-family: "Supplicamy Display"; font-weight: 900; font-style: normal; font-display: swap; unicode-range: U+0020-20AB, U+20AD-10FFFF; src: url("fonts/ObviouslyWide-Black.woff2") format("woff2"), local("Obviously Demo Wide Black"), local("ObviouslyDemo-WideBlack"); }
+      @font-face { font-family: "Supplicamy Display"; font-weight: 950; font-style: normal; font-display: swap; unicode-range: U+0020-20AB, U+20AD-10FFFF; src: url("fonts/ObviouslyWide-Super.woff2") format("woff2"), local("Obviously Demo Wide Super"), local("ObviouslyDemo-WideSuper"); }
+      @font-face { font-family: "Supplicamy Display"; font-weight: 700; font-style: normal; font-display: swap; unicode-range: U+0020-20AB, U+20AD-10FFFF; src: url("fonts/ObviouslyWide-Bold.woff2") format("woff2"), local("Obviously Demo Wide Bold"), local("ObviouslyDemo-WideBold"); }
+      /* corsivi: nessuna regola CSS usa font-style: italic -> NON embeddati, restano solo local() */
+      @font-face { font-family: "Supplicamy Display"; font-weight: 900; font-style: italic; src: local("Obviously Demo Wide Black Italic"), local("Obviously Demo Wide Blck Italic"), local("ObviouslyDemo-WideBlackItalic"); }
+      @font-face { font-family: "Supplicamy Display"; font-weight: 700; font-style: italic; src: local("Obviously Demo Wide Bold Italic"), local("Obviously Demo Wide Bold Bold Italic"), local("ObviouslyDemo-WideBoldItalic"); }
+      @font-face { font-family: "Supplicamy Script"; src: url("fonts/FolkiesVantageScript.woff2") format("woff2"), local("Folkies Vantage Script"), local("FolkiesVantageScript-FolkiesV"); font-display: swap; }
+
+      :root {
+        /* ---- Palette Supplicamy (DESIGN_SYSTEM_SUPPLICAMY.md) ---- */
+        --sup-orange: #EA6F23;
+        --sup-orange-deep: #D4561A;
+        --sup-red: #D4261F;
+        --sup-yellow: #FFC61A;
+        --sup-paper: #EDE3D8;
+        --sup-paper-light: #F4ECE2;
+        --sup-cream: #FBF7F2;
+        --sup-ink: #2A1710;
+        --sup-black: #1D1D1B;
+        --sup-mint: #03E3B9;
+        --sup-line: rgba(234, 111, 35, 0.32);
+        /* alias di compatibilita: il CSS ereditato da Clove resta leggibile */
+        --clove-purple: var(--sup-orange);
+        --clove-purple-deep: var(--sup-orange-deep);
+        --clove-cream: var(--sup-paper);
+        --clove-cream-light: var(--sup-paper-light);
+        --clove-white: var(--sup-cream);
+        --clove-line: var(--sup-line);
+        --header-height: 92px; /* 76px + 16px di fascia scacchi */
+        --rail-height: 54px;
+        --app-max-width: 558px;
+        --scacchi: url("img/scacchi-tile.png");
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        margin: 0;
+        min-width: 320px;
+        background: var(--clove-cream);
+        color: var(--clove-purple);
+        font-family: "Supplicamy Display", "Archivo", "Obviously", Arial, sans-serif;
+        font-stretch: 125%;
+        -webkit-font-smoothing: antialiased;
+        text-rendering: geometricPrecision;
+      }
+
+      button,
+      input {
+        font: inherit;
+      }
+
+      button {
+        color: inherit;
+        cursor: pointer;
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      img {
+        display: block;
+      }
+
+      .app-shell {
+        min-height: 100svh;
+        overflow-x: clip;
+        background: var(--clove-cream);
+      }
+
+      .menu-header {
+        position: sticky;
+        top: 0;
+        z-index: 50;
+        height: var(--header-height);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+        padding: 0 12px 16px;
+        background: var(--clove-cream);
+        border-bottom: 1.5px solid var(--clove-purple);
+      }
+
+      /* Fascia scacchi: chiude l'header (unico elemento grafico nuovo rispetto a Clove) */
+      .menu-header::after {
+        content: "";
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        height: 16px;
+        background: var(--scacchi) repeat-x;
+        background-size: 16px 16px;
+        pointer-events: none;
+      }
+
+      .brand-logo {
+        flex: 0 1 auto;
+        display: inline-flex;
+        align-items: center;
+        justify-content: flex-start;
+        width: auto;
+        min-width: 0;
+        color: var(--sup-orange);
+        text-decoration: none;
+      }
+
+      /* Logo definitivo (lockup 2,16:1 con "di Amalia Costantini"): si dimensiona
+         in LARGHEZZA cosi le pill dell'header non vengono mai tagliate sui telefoni stretti. */
+      .brand-logo img {
+        width: clamp(96px, 26vw, 128px);
+        height: auto;
+        max-height: 62px;
+        object-fit: contain;
+        object-position: left center;
+      }
+
+      .header-actions {
+        flex: 0 0 auto;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+      }
+
+      .menu-link {
+        min-height: 36px;
+        border: 1.5px solid var(--clove-purple);
+        border-radius: 999px;
+        background: transparent;
+        color: var(--clove-purple);
+        font-weight: 900;
+        line-height: 1;
+        text-align: center;
+        text-transform: uppercase;
+        transition: background 160ms ease, color 160ms ease, transform 160ms ease;
+      }
+
+      .menu-link {
+        min-width: 0;
+        padding: 6px 9px 8px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
+        font-size: 12px;
+        transform: scaleX(0.94);
+        transform-origin: right center;
+      }
+
+      .allergen-link {
+        min-width: 0;
+        font-size: 11.5px;
+      }
+
+      .language-link {
+        min-width: 34px;
+        padding-right: 6px;
+        padding-left: 6px;
+        font-size: 16px;
+      }
+
+      .order-menu-link {
+        min-width: 0;
+        font-size: 11.5px;
+      }
+
+      .menu-link.is-filled {
+        background: var(--clove-purple);
+        color: var(--clove-white);
+      }
+
+      .menu-link:active,
+      .mark-button:active,
+      .qty-action:active,
+      .qty-number:active,
+      .category-link:active,
+      .floating-arrow:active {
+        transform: scale(0.965);
+      }
+
+      .menu-link:active {
+        transform: scaleX(0.94) scale(0.965);
+      }
+
+      .order-count {
+        min-width: 16px;
+        height: 16px;
+        padding: 1px 4px 0;
+        display: inline-grid;
+        place-items: center;
+        border-radius: 999px;
+        background: currentColor;
+        color: var(--clove-cream);
+        font-size: 12px;
+        font-weight: 900;
+        line-height: 1;
+      }
+
+      .menu-link.is-filled .order-count {
+        background: var(--clove-white);
+        color: var(--clove-purple);
+      }
+
+      .order-count[hidden] {
+        display: none;
+      }
+
+      .category-rail {
+        position: sticky;
+        top: var(--header-height);
+        z-index: 45;
+        height: var(--rail-height);
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        overflow-x: auto;
+        padding: 8px 0 9px;
+        background: var(--clove-cream);
+        border-bottom: 1px solid var(--clove-line);
+        scroll-padding: 10px;
+        scroll-snap-type: x proximity;
+        scrollbar-width: none;
+      }
+
+      .category-rail::-webkit-scrollbar {
+        display: none;
+      }
+
+      .category-link {
+        flex: 0 0 auto;
+        min-height: 34px;
+        padding: 7px 11px 8px;
+        border: 1.5px solid var(--clove-purple);
+        border-radius: 999px;
+        background: transparent;
+        color: var(--clove-purple);
+        font-size: 16px;
+        font-weight: 900;
+        line-height: 1;
+        letter-spacing: 0;
+        text-transform: uppercase;
+        scroll-snap-align: center;
+      }
+
+      .category-link:first-child {
+        margin-left: 10px;
+      }
+
+      .category-link:last-child {
+        margin-right: 10px;
+      }
+
+      .category-link.is-active {
+        background: var(--clove-purple);
+        color: var(--clove-white);
+      }
+
+      .view {
+        display: block;
+      }
+
+      .view[hidden] {
+        display: none;
+      }
+
+      #menu-view {
+        position: relative;
+        background:
+          linear-gradient(rgba(234, 111, 35, 0.045) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(234, 111, 35, 0.045) 1px, transparent 1px),
+          var(--clove-cream);
+        background-size: 34px 34px;
+      }
+
+      .service-strip {
+        position: relative;
+        z-index: 1;
+        padding: 18px 18px 12px;
+        border-bottom: 1.5px solid var(--clove-line);
+      }
+
+      .service-strip__line {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 7px 0;
+        border-top: 1px solid var(--clove-purple);
+        color: var(--clove-purple);
+        font-size: clamp(9.5px, 3vw, 14px);
+        font-weight: 800;
+        line-height: 1;
+        text-transform: uppercase;
+        overflow: hidden;
+      }
+
+      .service-strip__line:last-child {
+        border-bottom: 1px solid var(--clove-purple);
+      }
+
+      .service-strip__line > * {
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .service-strip__line > *:last-child {
+        text-align: right;
+      }
+
+      .service-strip__line a {
+        color: var(--clove-purple);
+        text-decoration: none;
+      }
+
+      .service-strip__line--social {
+        flex-wrap: wrap;
+        gap: 8px;
+        overflow: visible;
+        padding: 9px 0 4px;
+      }
+
+      .ig-follow {
+        flex: 0 0 auto;
+        color: var(--clove-purple);
+        font-size: clamp(15px, 4.4vw, 21px);
+        font-weight: 900;
+        letter-spacing: 0.2px;
+      }
+
+      .ig-links {
+        flex: 1 1 auto;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 8px;
+        min-width: 0;
+        overflow: visible;
+      }
+
+      .ig-link {
+        display: inline-flex !important;
+        align-items: center;
+        gap: 6px;
+        min-height: 33px;
+        padding: 5px 11px 6px !important;
+        border-radius: 999px;
+        background: var(--clove-purple);
+        color: var(--clove-white) !important;
+        font-size: 10.5px;
+        text-decoration: none;
+        white-space: nowrap;
+        overflow: visible;
+        text-overflow: clip;
+        transition: transform 0.12s ease, background 0.15s ease, box-shadow 0.15s ease;
+        box-shadow: 0 3px 0 rgba(234, 111, 35, 0.18);
+      }
+
+      .ig-link:hover {
+        background: var(--sup-orange-deep);
+      }
+
+      .ig-link:active {
+        transform: translateY(1px);
+        box-shadow: 0 1px 0 rgba(234, 111, 35, 0.18);
+      }
+
+      .ig-icon {
+        width: 15px;
+        height: 15px;
+        flex: 0 0 auto;
+      }
+
+      .ig-link span {
+        min-width: 0;
+        white-space: nowrap;
+      }
+
+      .combo-menu-section {
+        position: relative;
+        scroll-margin-top: calc(var(--header-height) + var(--rail-height));
+        padding: 20px 18px 46px;
+        border-bottom: 1.5px solid var(--clove-line);
+        background:
+          linear-gradient(rgba(234, 111, 35, 0.045) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(234, 111, 35, 0.045) 1px, transparent 1px);
+        background-size: 34px 34px;
+      }
+
+      .combo-menu-header {
+        width: 100%;
+        margin: 0 auto 26px;
+      }
+
+      .combo-menu-title {
+        width: 100%;
+        height: auto;
+        margin: 0 auto;
+        display: grid;
+        place-items: center;
+        overflow: visible;
+      }
+
+      .combo-menu-title__image {
+        display: block;
+        width: 100%;
+        max-width: 100%;
+        height: auto;
+        object-fit: contain;
+        object-position: center;
+      }
+
+      /* Script Folkies Vantage: SOLO tagline, nota ordine e firma (max 1 per schermata) */
+      .combo-menu-copy {
+        width: 100%;
+        max-width: none;
+        margin: 10px auto 0;
+        color: var(--sup-orange);
+        font-family: "Supplicamy Script", "Mr Dafoe", cursive;
+        font-size: clamp(26px, 8vw, 34px);
+        font-weight: 400;
+        line-height: 1;
+        text-align: center;
+        text-transform: none;
+        transform: none;
+      }
+
+      .combo-menu-sub {
+        width: 100%;
+        margin: 6px auto 0;
+        color: var(--sup-ink);
+        font-size: 17px;
+        font-weight: 700;
+        line-height: 1.12;
+        text-align: center;
+        text-transform: uppercase;
+        transform: scaleX(0.94);
+      }
+
+      /* serie inline all'inizio del menu: pill affiancate, larghe quanto la parola */
+      /* serie inline all'inizio del menu: le tre pill stanno SEMPRE su una riga sola */
+      .combo-filter {
+        width: min(100%, 560px);
+        margin: 18px auto 20px;
+        display: flex;
+        flex-wrap: nowrap;
+        justify-content: center;
+        gap: clamp(6px, 2.2vw, 12px);
+      }
+
+      .combo-filter__button {
+        min-height: 44px;
+        padding: 8px clamp(9px, 3.6vw, 24px) 9px;
+        white-space: nowrap;
+        border: 1.5px solid var(--clove-purple);
+        border-radius: 999px;
+        background: transparent;
+        color: var(--clove-purple);
+        font-size: clamp(13px, 3.7vw, 16px);
+        font-weight: 900;
+        line-height: 1;
+        text-transform: uppercase;
+        transform: scaleX(0.94);
+      }
+
+      .combo-filter__button.is-active {
+        background: var(--clove-purple);
+        color: var(--clove-white);
+      }
+
+      .combo-grid {
+        width: min(100%, 1040px);
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 18px;
+      }
+
+      .combo-card {
+        position: relative;
+        overflow: hidden;
+        border: 1.5px solid rgba(234, 111, 35, 0.45);
+        background: var(--clove-white);
+        box-shadow: 0 10px 0 rgba(234, 111, 35, 0.055);
+      }
+
+      .combo-card[hidden] {
+        display: none;
+      }
+
+      /* Card "segnata": tinta viola leggera + bordo pieno, così si capisce a colpo d'occhio che è in carrello */
+      .combo-card.is-in-cart {
+        border-color: var(--clove-purple);
+        box-shadow: 0 10px 0 rgba(234, 111, 35, 0.14), inset 0 0 0 1.5px var(--clove-purple);
+        background: linear-gradient(180deg, rgba(234, 111, 35, 0.06), rgba(234, 111, 35, 0.02));
+      }
+
+      /* Timbro "SEGNATO ×N" sull'angolo della foto */
+      .combo-card__marked {
+        position: absolute;
+        top: 14px;
+        right: 12px;
+        z-index: 4;
+        padding: 7px 12px 8px;
+        border: 2px solid var(--clove-purple);
+        border-radius: 999px;
+        background: var(--clove-purple);
+        color: var(--clove-white);
+        font-size: 15px;
+        font-weight: 900;
+        line-height: 1;
+        letter-spacing: 0.3px;
+        text-transform: uppercase;
+        white-space: nowrap;
+        transform: rotate(5deg);
+        box-shadow: 2px 4px 0 rgba(234, 111, 35, 0.18);
+      }
+
+      .combo-card__marked[hidden] {
+        display: none;
+      }
+
+      /* se c'è anche il badge veg in alto a destra, scendo il timbro per non sovrapporli */
+      .combo-card.is-in-cart .combo-card__plant {
+        top: 52px;
+      }
+
+      .combo-card__image-wrap {
+        position: relative;
+        min-height: 0;
+        display: grid;
+        place-items: center;
+        padding: 58px 10px 10px;
+        background: var(--clove-white);
+      }
+
+      .combo-card__image {
+        width: min(100%, 500px);
+        height: auto;
+        max-height: none;
+        aspect-ratio: 4 / 3;
+        object-fit: cover;
+        border-radius: 18px;
+        background: var(--sup-paper-light);
+        filter: none;
+        position: relative;
+        z-index: 1;
+      }
+
+      .combo-card__badge {
+        position: absolute;
+        top: 16px;
+        left: 16px;
+        padding: 8px 13px 9px;
+        border: 2px solid var(--clove-purple);
+        border-radius: 999px;
+        background: var(--clove-cream);
+        color: var(--clove-purple);
+        font-size: 17px;
+        font-weight: 900;
+        line-height: 1;
+        text-transform: uppercase;
+        transform: rotate(-5deg) scaleX(0.94);
+        transform-origin: left center;
+        z-index: 4;
+      }
+
+      .plant-badge {
+        position: relative;
+        display: inline-grid !important;
+        place-items: center;
+        width: 28px;
+        height: 28px;
+        border: 2px solid var(--sup-ink);
+        border-radius: 50%;
+        background: var(--clove-white);
+        color: var(--sup-ink);
+        font-family: Arial, sans-serif;
+        font-size: 19px;
+        font-weight: 900;
+        line-height: 1;
+        text-transform: uppercase;
+        transform: none !important;
+      }
+
+      .plant-badge::before {
+        content: "V";
+        display: block;
+        transform: translateY(-1px) scaleX(0.94);
+      }
+
+      .plant-badge::after {
+        content: "";
+        position: absolute;
+        width: 9px;
+        height: 5px;
+        border-radius: 100% 0 100% 0;
+        background: var(--sup-ink);
+        transform: translate(6px, -8px) rotate(-22deg);
+      }
+
+      .combo-card__plant {
+        position: absolute;
+        top: 12px;
+        right: 12px;
+        z-index: 3;
+      }
+
+      .combo-card__body {
+        padding: 15px 16px 17px;
+      }
+
+      .combo-card__meta {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 5px 12px;
+        margin-bottom: 9px;
+        color: var(--clove-purple);
+        font-size: 14px;
+        font-weight: 900;
+        line-height: 1;
+        text-transform: uppercase;
+      }
+
+      .combo-card__period,
+      .combo-card__include {
+        display: inline-block;
+        transform: scaleX(0.94);
+      }
+
+      .combo-card__include {
+        min-width: 0;
+        margin-left: auto;
+        text-align: right;
+        overflow-wrap: normal;
+        hyphens: none;
+        transform-origin: right center;
+      }
+
+      .combo-card__title {
+        margin: 0;
+        color: var(--clove-purple);
+        font-size: clamp(42px, 11.5vw, 64px);
+        font-weight: 900;
+        line-height: 0.86;
+        letter-spacing: 0;
+        text-transform: uppercase;
+        overflow-wrap: normal;
+        word-break: normal;
+        hyphens: none;
+        transform: scaleX(0.94);
+        transform-origin: left center;
+      }
+
+      .combo-card__price {
+        margin: 8px 0 0;
+        color: var(--clove-purple);
+        font-size: clamp(42px, 11vw, 60px);
+        font-weight: 900;
+        line-height: 0.82;
+        transform: scaleX(0.94);
+        transform-origin: left center;
+      }
+
+      .combo-card__description {
+        margin: 7px 0 0;
+        color: var(--clove-purple);
+        font-size: 16px;
+        font-weight: 900;
+        line-height: 1;
+        text-transform: uppercase;
+        transform: scaleX(0.94);
+        transform-origin: left center;
+      }
+
+      .combo-card__included {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin: 11px 0 0;
+        padding: 5px 14px 6px 6px;
+        border: 1.5px solid var(--clove-purple);
+        border-radius: 999px;
+        background: var(--clove-white);
+        color: var(--clove-purple);
+        font-size: 14px;
+        font-weight: 900;
+        line-height: 1;
+        text-transform: uppercase;
+      }
+
+      .combo-card__included img {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        object-fit: contain;
+        background: rgba(234, 111, 35, 0.06);
+      }
+
+      .combo-card__included-tag {
+        padding: 4px 8px 5px;
+        border-radius: 999px;
+        background: var(--clove-purple);
+        color: var(--clove-white);
+        font-size: 10px;
+        letter-spacing: 0.3px;
+      }
+
+      .combo-recap__chip.is-included {
+        border-style: dashed;
+      }
+
+      .combo-recap__chip.is-included em {
+        font-style: normal;
+        font-size: 8px;
+        opacity: 0.62;
+      }
+
+      .combo-card__actions {
+        margin-top: 15px;
+        display: grid;
+        grid-template-columns: 1fr;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .combo-card__cta {
+        min-height: 48px;
+        padding: 8px 20px 10px;
+        border: 2px solid var(--clove-purple);
+        border-radius: 999px;
+        background: var(--clove-purple);
+        color: var(--clove-white);
+        font-size: 25px;
+        font-weight: 900;
+        line-height: 1;
+        text-transform: uppercase;
+      }
+
+      .combo-card__mini {
+        display: none;
+      }
+
+      .combo-card__cta.is-open {
+        background: var(--clove-cream);
+        color: var(--clove-purple);
+      }
+
+      .combo-card__cta:disabled,
+      .combo-card__cta.is-disabled {
+        background: rgba(234, 111, 35, 0.18);
+        border-color: rgba(234, 111, 35, 0.22);
+        color: var(--clove-white);
+        opacity: 1;
+        cursor: not-allowed;
+      }
+
+      .combo-card__cart {
+        flex: 1 1 auto;
+        min-width: 0;
+        display: grid;
+        place-items: stretch;
+      }
+
+      .combo-card__cart .combo-card__cta {
+        width: 100%;
+        min-height: 44px;
+        font-size: 21px;
+      }
+
+      .combo-card__qty {
+        width: 100%;
+        min-width: 0;
+        min-height: 44px;
+      }
+
+      /* ===== Combo configurator (stepped, visual) ===== */
+      .combo-config {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 14px;
+        margin-top: 16px;
+        padding-top: 16px;
+        border-top: 1.5px solid var(--clove-purple);
+      }
+
+      .combo-config__panels,
+      .combo-config__progress,
+      .combo-config__nav,
+      .combo-config__recap {
+        min-width: 0;
+      }
+
+      .combo-config[hidden] {
+        display: none;
+      }
+
+      .combo-config__progress {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 4px;
+      }
+
+      .combo-step-dot {
+        position: relative;
+        flex: 1 1 0;
+        display: grid;
+        justify-items: center;
+        gap: 5px;
+        padding: 0;
+        border: 0;
+        background: transparent;
+        color: var(--clove-purple);
+        cursor: pointer;
+      }
+
+      .combo-step-dot::before {
+        content: "";
+        position: absolute;
+        top: 15px;
+        left: calc(-50% + 17px);
+        width: calc(100% - 34px);
+        height: 2px;
+        background: rgba(234, 111, 35, 0.24);
+        z-index: 0;
+      }
+
+      .combo-step-dot:first-child::before {
+        display: none;
+      }
+
+      .combo-step-dot.is-active::before,
+      .combo-step-dot.is-done::before {
+        background: var(--clove-purple);
+      }
+
+      .combo-step-dot__num {
+        position: relative;
+        z-index: 1;
+        display: grid;
+        place-items: center;
+        width: 32px;
+        height: 32px;
+        border: 2px solid rgba(234, 111, 35, 0.4);
+        border-radius: 50%;
+        background: var(--clove-white);
+        font-size: 16px;
+        font-weight: 900;
+        line-height: 1;
+        transition: background 0.22s ease, color 0.22s ease, border-color 0.22s ease, transform 0.22s ease;
+      }
+
+      .combo-step-dot.is-active .combo-step-dot__num {
+        background: var(--clove-purple);
+        border-color: var(--clove-purple);
+        color: var(--clove-white);
+        transform: scale(1.08);
+      }
+
+      .combo-step-dot.is-done .combo-step-dot__num {
+        background: var(--clove-purple);
+        border-color: var(--clove-purple);
+        color: var(--clove-white);
+      }
+
+      .combo-step-dot__label {
+        font-size: 11px;
+        font-weight: 900;
+        line-height: 1;
+        text-transform: uppercase;
+        opacity: 0.62;
+        transform: scaleX(0.94);
+        transition: opacity 0.22s ease;
+      }
+
+      .combo-step-dot.is-active .combo-step-dot__label {
+        opacity: 1;
+      }
+
+      .combo-step[hidden] {
+        display: none;
+      }
+
+      .combo-step:not([hidden]) {
+        animation: comboStepIn 0.26s ease;
+      }
+
+      @keyframes comboStepIn {
+        from { opacity: 0; transform: translateY(6px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+
+      .combo-step__head {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 10px;
+        margin-bottom: 11px;
+      }
+
+      .combo-step__title {
+        margin: 0;
+        color: var(--clove-purple);
+        font-size: 22px;
+        font-weight: 900;
+        line-height: 0.92;
+        text-transform: uppercase;
+        transform: scaleX(0.94);
+        transform-origin: left center;
+      }
+
+      .combo-step__counter {
+        flex: 0 0 auto;
+        padding: 5px 11px 6px;
+        border: 1.5px solid var(--clove-purple);
+        border-radius: 999px;
+        color: var(--clove-purple);
+        font-size: 12px;
+        font-weight: 900;
+        line-height: 1;
+        text-transform: uppercase;
+        white-space: nowrap;
+        transition: background 0.22s ease, color 0.22s ease;
+      }
+
+      .combo-step__counter.is-full {
+        background: var(--clove-purple);
+        color: var(--clove-white);
+      }
+
+      .combo-step__counter.is-optional {
+        border-style: dashed;
+        opacity: 0.7;
+      }
+
+      /* Una colonna sola: nel taglio wide i nomi a 9-10 lettere (CARBONARA, MARGHERITA,
+         PUTTANESCO) si spezzavano a meta in una griglia a due colonne. */
+      .combo-chip-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 9px;
+      }
+
+      .combo-chip {
+        position: relative;
+        display: grid;
+        grid-template-columns: 52px minmax(0, 1fr);
+        align-items: center;
+        gap: 10px;
+        padding: 8px 32px 8px 8px;
+        border: 1.5px solid rgba(234, 111, 35, 0.3);
+        border-radius: 14px;
+        background: var(--clove-white);
+        color: var(--clove-purple);
+        cursor: pointer;
+        transition: border-color 0.18s ease, background 0.18s ease, box-shadow 0.18s ease, transform 0.12s ease;
+      }
+
+      .combo-chip:active {
+        transform: scale(0.98);
+      }
+
+      .combo-chip input {
+        position: absolute;
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      .combo-chip__thumb {
+        display: grid;
+        place-items: center;
+        width: 52px;
+        height: 52px;
+        border-radius: 11px;
+        background: rgba(234, 111, 35, 0.05);
+        overflow: hidden;
+      }
+
+      .combo-chip__thumb img {
+        width: 48px;
+        height: 48px;
+        object-fit: contain;
+        filter: drop-shadow(0 5px 5px rgba(42, 23, 16, 0.07));
+      }
+
+      .combo-chip__thumb.is-glyph {
+        background: rgba(234, 111, 35, 0.07);
+      }
+
+      .drink-glyph {
+        width: 60%;
+        height: 60%;
+        color: var(--clove-purple);
+        opacity: 0.85;
+      }
+
+      .combo-chip__name {
+        min-width: 0;
+        font-size: 12.5px;
+        font-weight: 900;
+        line-height: 1.04;
+        text-transform: uppercase;
+        overflow-wrap: break-word;
+        transform: scaleX(0.94);
+        transform-origin: left center;
+      }
+
+      .combo-chip__check {
+        position: absolute;
+        top: 50%;
+        right: 9px;
+        width: 22px;
+        height: 22px;
+        margin-top: -11px;
+        border: 2px solid rgba(234, 111, 35, 0.4);
+        border-radius: 50%;
+        background: var(--clove-white);
+        transition: background 0.18s ease, border-color 0.18s ease;
+      }
+
+      .combo-chip__check::after {
+        content: "";
+        position: absolute;
+        top: 4px;
+        left: 7px;
+        width: 5px;
+        height: 9px;
+        border: solid var(--clove-white);
+        border-width: 0 2.5px 2.5px 0;
+        opacity: 0;
+        transform: rotate(45deg) scale(0.5);
+        transition: opacity 0.18s ease, transform 0.18s ease;
+      }
+
+      .combo-chip.is-selected {
+        border-color: var(--clove-purple);
+        background: rgba(234, 111, 35, 0.06);
+        box-shadow: inset 0 0 0 1px var(--clove-purple);
+      }
+
+      .combo-chip.is-selected .combo-chip__check {
+        background: var(--clove-purple);
+        border-color: var(--clove-purple);
+      }
+
+      .combo-chip.is-selected .combo-chip__check::after {
+        opacity: 1;
+        transform: rotate(45deg) scale(1);
+      }
+
+      .combo-chip.is-disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+        filter: grayscale(0.4);
+      }
+
+      /* Pulsante "NESSUN EXTRA": salta gli extra e conclude (occupa lo slot vuoto della griglia) */
+      .combo-chip--skip {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        min-height: 68px;
+        padding: 8px 12px;
+        border: 1.5px dashed rgba(234, 111, 35, 0.55);
+        border-radius: 14px;
+        background: transparent;
+        color: var(--clove-purple);
+        font-size: 13px;
+        font-weight: 900;
+        line-height: 1.04;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: background 0.18s ease, border-color 0.18s ease, transform 0.12s ease;
+      }
+
+      .combo-chip--skip:active {
+        transform: scale(0.98);
+        background: rgba(234, 111, 35, 0.06);
+      }
+
+      .combo-chip__skip-arrow {
+        font-size: 17px;
+        line-height: 1;
+      }
+
+      .combo-config__nav {
+        display: grid;
+        grid-template-columns: 1fr 1.4fr;
+        gap: 10px;
+      }
+
+      .combo-nav__btn {
+        min-height: 46px;
+        padding: 8px 14px 10px;
+        border: 2px solid var(--clove-purple);
+        border-radius: 999px;
+        background: var(--clove-white);
+        color: var(--clove-purple);
+        font-size: clamp(12px, 3.6vw, 15px);
+        font-weight: 900;
+        line-height: 1;
+        text-transform: uppercase;
+        transform: scaleX(0.94);
+        transition: background 0.18s ease, color 0.18s ease, opacity 0.18s ease;
+      }
+
+      .combo-nav__btn.is-primary {
+        background: var(--clove-purple);
+        color: var(--clove-white);
+      }
+
+      .combo-nav__btn:disabled {
+        opacity: 0.32;
+      }
+
+      .combo-config__recap {
+        padding: 12px 13px 13px;
+        border: 1.5px solid var(--clove-purple);
+        border-radius: 16px;
+        background: var(--clove-cream);
+      }
+
+      .combo-recap__list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 7px;
+        min-height: 36px;
+        margin-bottom: 11px;
+      }
+
+      .combo-recap__chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 5px 11px 5px 5px;
+        border: 1.5px solid rgba(234, 111, 35, 0.4);
+        border-radius: 999px;
+        background: var(--clove-white);
+        color: var(--clove-purple);
+        font-size: 11px;
+        font-weight: 900;
+        line-height: 1;
+        text-transform: uppercase;
+        animation: comboStepIn 0.2s ease;
+      }
+
+      .combo-recap__chip img {
+        width: 26px;
+        height: 26px;
+        border-radius: 50%;
+        object-fit: contain;
+        background: rgba(234, 111, 35, 0.05);
+      }
+
+      .combo-recap__glyph {
+        display: grid;
+        place-items: center;
+        width: 26px;
+        height: 26px;
+        border-radius: 50%;
+        background: rgba(234, 111, 35, 0.08);
+      }
+
+      .combo-recap__glyph .drink-glyph {
+        width: 16px;
+        height: 16px;
+      }
+
+      .combo-recap__chip-name {
+        transform: scaleX(0.94);
+        transform-origin: left center;
+      }
+
+      .combo-recap__empty {
+        align-self: center;
+        color: var(--clove-purple);
+        font-size: 13px;
+        font-weight: 900;
+        line-height: 1;
+        text-transform: uppercase;
+        opacity: 0.6;
+        transform: scaleX(0.94);
+        transform-origin: left center;
+      }
+
+      .combo-recap__foot {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        min-width: 0;
+      }
+
+      .combo-recap__foot .combo-card__cart {
+        min-width: 0;
+      }
+
+      /* il controllo quantità nel recap deve restare dentro la card: niente min-width fisso */
+      .combo-recap__foot .combo-card__qty {
+        min-width: 0;
+        width: 100%;
+        min-height: 46px;
+      }
+
+      .combo-recap__price {
+        flex: 0 0 auto;
+        color: var(--clove-purple);
+        font-size: 34px;
+        font-weight: 900;
+        line-height: 0.9;
+        transform: scaleX(0.94);
+        transform-origin: left center;
+      }
+
+      .category-title-section {
+        position: relative;
+        scroll-margin-top: calc(var(--header-height) + var(--rail-height));
+        padding: 30px 18px 20px;
+        display: grid;
+        grid-template-columns: minmax(42px, 1fr) auto minmax(42px, 1fr);
+        align-items: center;
+        gap: 16px;
+      }
+
+      .category-title-section::before,
+      .category-title-section::after {
+        content: "";
+        height: 1.5px;
+        background: var(--clove-purple);
+      }
+
+      .category-title {
+        width: auto;
+        max-width: none;
+        margin: 0;
+        color: var(--clove-purple);
+        font-family: "Supplicamy Display", "Archivo", "Obviously", Arial, sans-serif;
+        font-size: clamp(24px, 8.2vw, 44px);
+        font-weight: 900;
+        line-height: 0.78;
+        letter-spacing: 0;
+        text-align: center;
+        text-transform: uppercase;
+        white-space: nowrap;
+        transform: scaleX(1.08);
+        transform-origin: center;
+      }
+
+      /* ===================================================================
+         MODULO CARD PRODOTTO (V2) — stessa anatomia della card BOX (.combo-card):
+         pannello panna, badge ruotato, foto nel riquadro stondato, kicker,
+         titolo, prezzo, descrizione, CTA pieno a tutta larghezza.
+         =================================================================== */
+      .product-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 16px;
+        padding: 0 18px 30px;
+      }
+
+      .product-card {
+        position: relative;
+        overflow: hidden;
+        scroll-margin-top: calc(var(--header-height) + var(--rail-height));
+        border: 1.5px solid rgba(234, 111, 35, 0.45);
+        background: var(--clove-white);
+        box-shadow: 0 10px 0 rgba(234, 111, 35, 0.055);
+      }
+
+      .product-card.is-in-cart {
+        border-color: var(--sup-orange);
+        box-shadow: 0 10px 0 rgba(234, 111, 35, 0.14), inset 0 0 0 1.5px var(--sup-orange);
+        background: linear-gradient(180deg, rgba(255, 198, 26, 0.42), rgba(255, 198, 26, 0.12));
+      }
+
+      .product-card__image-wrap {
+        position: relative;
+        min-height: 0;
+        display: grid;
+        place-items: center;
+        padding: 58px 10px 10px;
+      }
+
+      .product-card__image {
+        width: min(100%, 500px);
+        height: auto;
+        max-height: none;
+        aspect-ratio: 4 / 3;
+        object-fit: cover;
+        border-radius: 18px;
+        background: var(--sup-paper-light);
+        filter: none;
+        position: relative;
+        z-index: 1;
+      }
+
+      .product-card__badge {
+        position: absolute;
+        top: 16px;
+        left: 16px;
+        z-index: 4;
+        max-width: calc(100% - 32px);
+        padding: 8px 13px 9px;
+        border: 2px solid var(--clove-purple);
+        border-radius: 999px;
+        background: var(--clove-cream);
+        color: var(--clove-purple);
+        font-size: 17px;
+        font-weight: 900;
+        line-height: 1;
+        text-transform: uppercase;
+        white-space: nowrap;
+        transform: rotate(-6deg) scaleX(0.94);
+        transform-origin: left center;
+      }
+
+      /* Timbro "SEGNATO xN" sull'angolo della foto (= .combo-card__marked) */
+      .product-card__marked {
+        position: absolute;
+        top: 14px;
+        right: 12px;
+        z-index: 4;
+        padding: 7px 12px 8px;
+        border: 2px solid var(--sup-red);
+        border-radius: 999px;
+        background: var(--sup-red);
+        color: var(--sup-cream);
+        font-size: 15px;
+        font-weight: 900;
+        line-height: 1;
+        letter-spacing: 0.3px;
+        text-transform: uppercase;
+        white-space: nowrap;
+        transform: rotate(5deg);
+        box-shadow: 2px 4px 0 rgba(212, 38, 31, 0.22);
+      }
+
+      .product-card__marked[hidden] {
+        display: none;
+      }
+
+      .product-card__body {
+        padding: 15px 16px 18px;
+      }
+
+      /* Kicker: due blocchi, wrap consentito. Se il destro non entra scende SOTTO a sinistra. */
+      .product-card__kicker {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 5px 12px;
+        margin-bottom: 9px;
+        color: var(--clove-purple);
+        font-size: 14px;
+        font-weight: 900;
+        line-height: 1;
+        text-transform: uppercase;
+      }
+
+      .product-card__kicker-left {
+        min-width: 0;
+        display: inline-block;
+        white-space: nowrap;
+        transform: scaleX(0.94);
+        transform-origin: left center;
+      }
+
+      .product-card__kicker-right {
+        min-width: 0;
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        white-space: nowrap;
+      }
+
+      .product-card__allergens {
+        display: inline-block;
+        font-size: 12.5px;
+        white-space: nowrap;
+        transform: scaleX(0.94);
+        transform-origin: right center;
+      }
+
+      .product-card__kicker-right .plant-badge {
+        width: 22px;
+        height: 22px;
+        font-size: 15px;
+      }
+
+      /* Titolo: a capo per PAROLA, mai spezzato, mai tagliato (shrinkToFit fa il resto). */
+      .product-card__title {
+        position: relative;
+        margin: 0;
+        color: var(--clove-purple);
+        font-size: clamp(30px, 10vw, 46px);
+        font-weight: 900;
+        line-height: 0.9;
+        letter-spacing: 0;
+        text-align: left;
+        text-transform: uppercase;
+        white-space: normal;
+        overflow-wrap: normal;
+        word-break: normal;
+        hyphens: none;
+        transform: scaleX(0.94);
+        transform-origin: left center;
+      }
+
+      .product-card__price {
+        margin: 8px 0 0;
+        color: var(--sup-red);
+        font-size: clamp(42px, 11vw, 60px);
+        font-weight: 950;
+        line-height: 0.82;
+        transform: scaleX(0.94);
+        transform-origin: left center;
+      }
+
+      .product-card__description {
+        margin: 9px 0 0;
+        color: var(--sup-ink);
+        font-size: 16px;
+        font-weight: 700;
+        line-height: 1.15;
+        text-transform: uppercase;
+        overflow-wrap: normal;
+        hyphens: none;
+        text-wrap: balance;
+        text-wrap: pretty;
+        transform: scaleX(0.94);
+        transform-origin: left center;
+      }
+
+      .product-card__actions {
+        margin-top: 15px;
+        display: grid;
+        grid-template-columns: 1fr;
+        align-items: center;
+        gap: 8px;
+      }
+
+      /* CTA "SEGNA" = "SCEGLI MENU" delle BOX: pieno arancio, panna, radius 999, tutta larghezza */
+      .product-card__actions .mark-button {
+        width: 100%;
+        min-width: 0;
+        min-height: 48px;
+        padding: 8px 20px 10px;
+        border: 2px solid var(--clove-purple);
+        border-radius: 999px;
+        background: var(--clove-purple);
+        color: var(--clove-white);
+        font-size: 25px;
+        font-weight: 900;
+      }
+
+      .product-card__actions .qty-control {
+        width: 100%;
+        min-width: 0;
+        min-height: 48px;
+      }
+
+      .soldout-stamp {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 36%;
+        transform: translate(-50%, -52%) scaleX(1.0638) rotate(-8deg);
+        pointer-events: none;
+        z-index: 3;
+      }
+
+      .soldout-stamp svg {
+        display: block;
+        width: 100%;
+        height: auto;
+      }
+
+      .mark-button,
+      .order-link,
+      .back-button,
+      .clear-button {
+        min-height: 54px;
+        border: 2px solid var(--clove-purple);
+        border-radius: 999px;
+        background: transparent;
+        color: var(--clove-purple);
+        font-size: 30px;
+        font-weight: 800;
+        line-height: 1;
+        letter-spacing: 0;
+        text-align: center;
+        text-transform: uppercase;
+      }
+
+      .mark-button {
+        min-width: 224px;
+        padding: 6px 39px 8px;
+      }
+
+      .mark-button.is-selected,
+      .order-link {
+        background: var(--clove-purple);
+        color: var(--clove-white);
+      }
+
+      .qty-control {
+        min-width: min(78vw, 244px);
+        min-height: 54px;
+        display: inline-grid;
+        grid-template-columns: 1fr 1fr;
+        align-items: center;
+        border: 2px solid var(--clove-purple);
+        border-radius: 999px;
+        overflow: hidden;
+        background: var(--clove-white);
+      }
+
+      .qty-action,
+      .qty-number {
+        height: 100%;
+        border: 0;
+        font-weight: 900;
+        line-height: 1;
+        text-transform: uppercase;
+      }
+
+      .qty-action {
+        background: var(--clove-white);
+        color: var(--clove-purple);
+        font-size: 17px;
+        transform: scaleX(0.94);
+      }
+
+      .qty-number {
+        display: grid;
+        place-items: center;
+        background: var(--clove-purple);
+        color: var(--clove-white);
+        font-size: 28px;
+        font-weight: 900;
+      }
+
+      .qty-value {
+        transform: scaleX(0.94);
+      }
+
+      .compact-section {
+        scroll-margin-top: calc(var(--header-height) + var(--rail-height));
+        padding: 0 0 8px;
+      }
+
+      /* Mini-card bevande/birre: stesso pannello panna, senza foto. Griglia 2 colonne:
+         riga 1 nome | prezzo, riga 2 dettaglio | SEGNA. Niente sovrapposizioni possibili. */
+      .compact-list {
+        display: grid;
+        gap: 12px;
+        padding: 0 18px 30px;
+      }
+
+      .compact-row {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        grid-template-areas:
+          "name  price"
+          "text  action";
+        align-items: start;
+        gap: 8px 12px;
+        padding: 14px 16px;
+        border: 1.5px solid rgba(234, 111, 35, 0.45);
+        border-radius: 18px;
+        background: var(--clove-white);
+        box-shadow: 0 8px 0 rgba(234, 111, 35, 0.055);
+      }
+
+      .compact-row__name {
+        grid-area: name;
+        min-width: 0;
+        margin: 0;
+        align-self: center;
+        color: var(--clove-purple);
+        font-size: 18px;
+        font-weight: 900;
+        line-height: 1;
+        text-transform: uppercase;
+        overflow-wrap: normal;
+        hyphens: none;
+        transform: scaleX(0.94);
+        transform-origin: left center;
+      }
+
+      .compact-row__text {
+        grid-area: text;
+        min-width: 0;
+        align-self: center;
+      }
+
+      .compact-row__meta {
+        margin: 0;
+        color: var(--sup-ink);
+        font-size: 13px;
+        font-weight: 700;
+        line-height: 1.15;
+        text-transform: uppercase;
+        overflow-wrap: normal;
+        hyphens: none;
+        transform: scaleX(0.94);
+        transform-origin: left center;
+      }
+
+      .compact-row__allergens {
+        margin: 4px 0 0;
+        color: var(--sup-ink);
+        font-size: 12px;
+        font-weight: 900;
+        line-height: 1.1;
+        text-transform: uppercase;
+        transform: scaleX(0.94);
+        transform-origin: left center;
+      }
+
+      .compact-price {
+        grid-area: price;
+        justify-self: end;
+        align-self: center;
+        min-width: 0;
+        color: var(--sup-red);
+        font-size: 22px;
+        font-weight: 950;
+        line-height: 1;
+        text-align: right;
+        white-space: nowrap;
+        transform: scaleX(0.94);
+        transform-origin: right center;
+      }
+
+      .compact-row__actions {
+        grid-area: action;
+        justify-self: end;
+        align-self: center;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 8px;
+        min-width: 0;
+      }
+
+      .compact-add {
+        min-width: 104px;
+        min-height: 40px;
+        padding: 4px 16px 6px;
+        border: 2px solid var(--clove-purple);
+        border-radius: 999px;
+        background: var(--clove-purple);
+        color: var(--clove-white);
+        font-size: 19px;
+        font-weight: 900;
+        line-height: 1;
+        text-transform: uppercase;
+      }
+
+      .compact-quantity {
+        min-width: 116px;
+        min-height: 40px;
+        display: inline-grid;
+        grid-template-columns: 1fr 1fr;
+        overflow: hidden;
+        border: 2px solid var(--clove-purple);
+        border-radius: 999px;
+        background: var(--clove-white);
+      }
+
+      .compact-quantity button {
+        min-width: 0;
+        border: 0;
+        font-weight: 900;
+        line-height: 1;
+        text-transform: uppercase;
+      }
+
+      .compact-quantity__remove {
+        background: var(--clove-white);
+        color: var(--clove-purple);
+        font-size: 13px;
+        transform: scaleX(0.94);
+      }
+
+      .compact-quantity__count {
+        display: grid;
+        place-items: center;
+        background: var(--clove-purple);
+        color: var(--clove-white);
+        font-size: 20px;
+      }
+
+      /* V2: dischetto panna in basso a destra — non tocca piu il bordo delle card */
+      .floating-arrow {
+        --scroll-float: 0px;
+        position: fixed;
+        right: max(14px, calc((100vw - var(--app-max-width)) / 2 + 14px));
+        bottom: calc(18px + env(safe-area-inset-bottom));
+        z-index: 90;
+        width: 44px;
+        height: 44px;
+        padding: 0;
+        display: grid;
+        place-items: center;
+        border: 1.5px solid var(--sup-line);
+        border-radius: 50%;
+        background: var(--sup-cream);
+        box-shadow: 0 4px 0 rgba(234, 111, 35, 0.16);
+        transform: translateY(var(--scroll-float));
+        animation: arrow-breathe 2.9s ease-in-out infinite;
+        opacity: 1;
+        pointer-events: auto;
+        transition: opacity 260ms ease, filter 220ms ease, transform 260ms ease;
+      }
+
+      .floating-arrow::after {
+        content: "SU";
+        position: absolute;
+        right: 52px;
+        bottom: 6px;
+        padding: 4px 9px 6px;
+        border: 1.5px solid var(--sup-red);
+        border-radius: 999px;
+        background: var(--clove-cream);
+        color: var(--sup-red);
+        font-size: 15px;
+        font-weight: 900;
+        line-height: 0.9;
+        opacity: 0;
+        transform: rotate(-8deg) scaleX(0.94) translateY(4px);
+        transform-origin: right center;
+        transition: opacity 220ms ease, transform 220ms ease;
+        pointer-events: none;
+      }
+
+      .floating-arrow img {
+        width: 15px;
+        height: 28px;
+        object-fit: contain;
+        transition: filter 220ms ease, opacity 220ms ease, transform 360ms cubic-bezier(0.22, 1, 0.36, 1);
+      }
+
+      .floating-arrow.is-bottom img {
+        filter: sepia(1) saturate(4.6) hue-rotate(322deg) brightness(0.88);
+        opacity: 0.94;
+        transform: rotate(180deg);
+      }
+
+      .floating-arrow.is-bottom::after {
+        opacity: 1;
+        transform: rotate(-8deg) scaleX(0.94) translateY(0);
+      }
+
+      .floating-arrow.is-hidden {
+        opacity: 0;
+        pointer-events: none;
+        transform: translateY(calc(var(--scroll-float) + 14px)) scale(0.96);
+      }
+
+      .floating-arrow.is-returning img {
+        transform: rotate(180deg);
+      }
+
+      @keyframes arrow-breathe {
+        0%,
+        100% {
+          translate: 0 -2px;
+        }
+
+        50% {
+          translate: 0 4px;
+        }
+      }
+
+      .order-transition {
+        position: fixed;
+        inset: 0;
+        z-index: 120;
+        display: grid;
+        place-items: center;
+        background: var(--clove-purple);
+        color: var(--clove-white);
+        opacity: 0;
+        pointer-events: none;
+        transform: scale(1.02);
+        transition: opacity 280ms ease, transform 640ms cubic-bezier(0.22, 1, 0.36, 1);
+      }
+
+      .order-transition[hidden] {
+        display: none;
+      }
+
+      .order-transition.is-active {
+        opacity: 1;
+        transform: scale(1);
+      }
+
+      .order-transition__text {
+        width: min(88vw, 460px);
+        margin: 0;
+        font-size: clamp(24px, 7vw, 52px);
+        font-weight: 900;
+        line-height: 0.78;
+        text-align: center;
+        text-transform: uppercase;
+        transform: scaleX(0.94);
+      }
+
+      .order-cta-section {
+        position: relative;
+        /* 96px in fondo: la CTA non finisce mai sotto il dischetto della freccia (44px + 18px) */
+        padding: 44px 18px 96px;
+        display: grid;
+        place-items: center;
+      }
+
+      /* Fascia scacchi: chiusura della pagina prima della CTA ordine */
+      .order-cta-section::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        right: 0;
+        left: 0;
+        height: 16px;
+        background: var(--scacchi) repeat-x;
+        background-size: 16px 16px;
+        pointer-events: none;
+      }
+
+      .order-link {
+        width: min(86vw, 390px);
+        font-size: clamp(17px, 5.2vw, 26px);
+        text-decoration: none;
+      }
+
+      .order-page {
+        min-height: calc(100svh - var(--header-height));
+        position: relative;
+        overflow: hidden;
+        padding: 44px 16px 76px;
+      }
+
+      .order-page::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+        background:
+          linear-gradient(rgba(234, 111, 35, 0.055) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(234, 111, 35, 0.055) 1px, transparent 1px);
+        background-size: 34px 34px;
+        mask-image: linear-gradient(to bottom, transparent, #000 9%, #000 91%, transparent);
+        pointer-events: none;
+      }
+
+      .order-page > * {
+        position: relative;
+        z-index: 1;
+      }
+
+      .order-title {
+        width: max-content;
+        max-width: none;
+        margin: 0 auto 12px;
+        color: var(--clove-purple);
+        font-size: clamp(24px, 8vw, 52px);
+        font-weight: 900;
+        line-height: 0.82;
+        letter-spacing: 0;
+        text-align: center;
+        text-transform: uppercase;
+        white-space: nowrap;
+        transform: scaleX(0.94);
+      }
+
+      .order-note {
+        width: min(100%, 430px);
+        margin: 0 auto 34px;
+        color: var(--sup-orange);
+        font-family: "Supplicamy Script", "Mr Dafoe", cursive;
+        font-size: clamp(24px, 6.6vw, 30px);
+        font-weight: 400;
+        line-height: 1.05;
+        text-align: center;
+        text-transform: none;
+        transform: none;
+        overflow-wrap: anywhere;
+      }
+
+      .allergen-page {
+        min-height: calc(100svh - var(--header-height));
+        position: relative;
+        overflow: hidden;
+        padding: 44px 18px 72px;
+        color: var(--clove-purple);
+      }
+
+      .allergen-page::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+        background:
+          linear-gradient(rgba(234, 111, 35, 0.055) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(234, 111, 35, 0.055) 1px, transparent 1px);
+        background-size: 34px 34px;
+        pointer-events: none;
+      }
+
+      .allergen-page > * {
+        position: relative;
+        z-index: 1;
+      }
+
+      .allergen-title {
+        width: max-content;
+        max-width: none;
+        margin: 0 auto 20px;
+        color: var(--clove-purple);
+        font-size: clamp(30px, 11.4vw, 64px);
+        font-weight: 900;
+        line-height: 0.82;
+        letter-spacing: 0;
+        text-align: center;
+        text-transform: uppercase;
+        white-space: nowrap;
+        transform: scaleX(0.94);
+      }
+
+      .allergen-list {
+        width: min(100%, 430px);
+        margin: 0 auto 32px;
+        padding: 0;
+        list-style: none;
+        border-top: 1.5px solid var(--clove-purple);
+      }
+
+      .allergen-list li {
+        display: grid;
+        grid-template-columns: 44px minmax(0, 1fr);
+        gap: 12px;
+        align-items: center;
+        padding: 12px 0 11px;
+        border-bottom: 1.5px solid var(--clove-purple);
+      }
+
+      .allergen-code {
+        width: 38px;
+        height: 38px;
+        display: grid;
+        place-items: center;
+        border: 1.5px solid var(--clove-purple);
+        border-radius: 999px;
+        font-size: 19px;
+        font-weight: 900;
+        line-height: 1;
+      }
+
+      .allergen-name {
+        font-size: 20px;
+        font-weight: 900;
+        line-height: 0.95;
+        text-transform: uppercase;
+        transform: scaleX(0.94);
+        transform-origin: left center;
+      }
+
+      .order-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 18px 13px;
+        padding-top: 4px;
+      }
+
+      .order-grid:empty {
+        display: none;
+      }
+
+      .order-card {
+        position: relative;
+        min-height: 236px;
+        padding: 26px 9px 13px;
+        display: grid;
+        grid-template-rows: auto auto 1fr auto;
+        align-content: start;
+        align-items: center;
+        justify-items: center;
+        overflow: visible;
+        isolation: isolate;
+        background: var(--clove-white);
+        border: 1.5px solid rgba(234, 111, 35, 0.42);
+        box-shadow: 0 10px 0 rgba(234, 111, 35, 0.05);
+        transform: rotate(-1.4deg);
+      }
+
+      .order-card.is-combo {
+        grid-column: 1 / -1;
+        justify-self: center;
+        width: min(100%, 392px);
+        min-height: 360px;
+        padding: 30px 16px 18px;
+        grid-template-rows: auto auto auto;
+        align-content: start;
+        transform: rotate(-0.8deg);
+      }
+
+      .order-card.is-combo .order-card__title {
+        width: 92%;
+        margin-bottom: 10px;
+        font-size: clamp(19px, 5.2vw, 26px);
+      }
+
+      .order-card.is-combo .order-card__img {
+        width: min(94%, 330px);
+        max-width: 94%;
+        max-height: none;
+        margin-top: 0;
+      }
+
+      .order-card:nth-child(2n) {
+        transform: rotate(1.2deg);
+      }
+
+      .order-card:nth-child(3n) {
+        transform: rotate(-0.6deg);
+      }
+
+      .order-card::before {
+        content: "";
+        position: absolute;
+        top: -12px;
+        left: 50%;
+        z-index: 5;
+        width: 24px;
+        height: 24px;
+        border: 1px solid rgba(234, 111, 35, 0.3);
+        border-radius: 50%;
+        background:
+          radial-gradient(circle at 31% 28%, rgba(255, 255, 255, 0.74) 0 13%, transparent 14%),
+          radial-gradient(circle at 58% 64%, var(--clove-purple) 0 58%, var(--sup-orange-deep) 59% 100%);
+        box-shadow: 4px 6px 0 rgba(234, 111, 35, 0.08), 1px 3px 5px rgba(42, 23, 16, 0.13);
+        transform: translateX(-50%);
+      }
+
+      .order-card::after {
+        content: "";
+        position: absolute;
+        top: 10px;
+        left: 50%;
+        z-index: 4;
+        width: 3px;
+        height: 13px;
+        border-radius: 999px;
+        background: linear-gradient(90deg, #bbb8b3 0 38%, #fbf8f3 39% 62%, #9f9d99 63% 100%);
+        box-shadow: 3px 5px 0 rgba(234, 111, 35, 0.04);
+        transform: translateX(-50%) rotate(8deg);
+        transform-origin: top center;
+      }
+
+      /* Le foto Supplicamy sono piene (non scontornate): il titolo sta SOPRA la foto,
+         non sovrapposto, altrimenti sarebbe illeggibile. */
+      .order-card__title {
+        position: relative;
+        z-index: 1;
+        width: 100%;
+        margin: 0 0 8px;
+        color: var(--clove-purple);
+        font-size: clamp(11px, 3.6vw, 17px);
+        font-weight: 900;
+        line-height: 0.9;
+        letter-spacing: 0;
+        text-align: center;
+        text-transform: uppercase;
+        white-space: normal;
+        overflow-wrap: anywhere;
+        pointer-events: none;
+        transform: scaleX(0.94);
+      }
+
+      .order-card__title.is-small {
+        font-size: clamp(10px, 3.2vw, 15px);
+      }
+
+      .order-card__img {
+        position: relative;
+        z-index: 2;
+        width: 100%;
+        max-width: 100%;
+        max-height: none;
+        margin-top: 0;
+        aspect-ratio: 4 / 3;
+        object-fit: cover;
+        border-radius: 18px;
+        border: 1.5px solid rgba(234, 111, 35, 0.28);
+        background: var(--sup-paper-light);
+        filter: none;
+      }
+
+      .order-card__placeholder {
+        width: 94%;
+        min-height: 104px;
+        display: grid;
+        place-items: center;
+        border-top: 1px solid var(--clove-line);
+        border-bottom: 1px solid var(--clove-line);
+        color: var(--clove-purple);
+        font-size: 28px;
+        font-weight: 900;
+        line-height: 0.85;
+        text-transform: uppercase;
+        transform: scaleX(0.94);
+      }
+
+      .order-card__meta {
+        display: none;
+        position: relative;
+        z-index: 3;
+        margin: 2px 0 9px;
+        color: var(--clove-purple);
+        font-size: 24px;
+        font-weight: 900;
+        line-height: 0.9;
+        transform: scaleX(0.94);
+      }
+
+      .order-card__recap {
+        position: relative;
+        z-index: 3;
+        width: 94%;
+        margin: 5px auto 10px;
+        display: grid;
+        gap: 4px;
+        color: var(--clove-purple);
+        text-transform: uppercase;
+      }
+
+      .order-card__recap-row {
+        min-height: 22px;
+        display: flex;
+        align-items: flex-start;
+        gap: 5px;
+        border-top: 1px solid rgba(234, 111, 35, 0.26);
+        padding-top: 4px;
+        font-size: 11px;
+        font-weight: 900;
+        line-height: 0.94;
+      }
+
+      .order-card__recap-row:first-child {
+        border-top: 0;
+        padding-top: 0;
+      }
+
+      .order-card__recap-tag {
+        flex: 0 0 auto;
+        display: inline-grid;
+        place-items: center;
+        min-width: 34px;
+        min-height: 18px;
+        border: 1.2px solid var(--clove-purple);
+        border-radius: 999px;
+        font-size: 9px;
+        line-height: 1;
+        transform: scaleX(0.94);
+      }
+
+      .order-card__recap-text {
+        min-width: 0;
+        white-space: normal;
+        transform: scaleX(0.94);
+        transform-origin: left center;
+      }
+
+      .order-card.is-combo .order-card__recap {
+        width: 92%;
+        margin-top: 12px;
+        margin-bottom: 14px;
+        gap: 6px;
+      }
+
+      .order-card.is-combo .order-card__recap-row {
+        min-height: 27px;
+        gap: 8px;
+        font-size: 14px;
+        line-height: 0.96;
+      }
+
+      .order-card.is-combo .order-card__recap-tag {
+        min-width: 58px;
+        min-height: 20px;
+        font-size: 8px;
+      }
+
+      .order-card__thumbs {
+        position: relative;
+        z-index: 3;
+        width: 94%;
+        margin: 12px auto 4px;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 7px;
+      }
+
+      .order-thumb {
+        display: grid;
+        justify-items: center;
+        gap: 4px;
+        width: 74px;
+      }
+
+      .order-thumb__img {
+        width: 54px;
+        height: 54px;
+        object-fit: contain;
+        border-radius: 12px;
+        background: rgba(234, 111, 35, 0.05);
+        filter: drop-shadow(0 6px 6px rgba(42, 23, 16, 0.06));
+      }
+
+      .order-thumb__glyph {
+        display: grid;
+        place-items: center;
+        width: 54px;
+        height: 54px;
+        border-radius: 12px;
+        background: rgba(234, 111, 35, 0.07);
+      }
+
+      .order-thumb__glyph .drink-glyph {
+        width: 28px;
+        height: 28px;
+      }
+
+      .order-thumb__name {
+        width: 100%;
+        color: var(--clove-purple);
+        font-size: 8.5px;
+        font-weight: 900;
+        line-height: 1.05;
+        text-align: center;
+        text-transform: uppercase;
+        overflow-wrap: normal;
+        word-break: normal;
+        hyphens: none;
+      }
+
+      .order-card.is-combo .order-card__qty {
+        width: min(100%, 224px);
+        min-height: 43px;
+      }
+
+      .order-card__qty {
+        width: min(100%, 132px);
+        min-width: 0;
+        min-height: 38px;
+        grid-template-columns: 1fr 1fr;
+        background: var(--clove-white);
+      }
+
+      .order-card__qty .qty-action {
+        font-size: 11px;
+      }
+
+      .order-card__qty .qty-number {
+        font-size: 20px;
+      }
+
+      .order-text-list {
+        width: min(100%, 510px);
+        margin: 18px auto 0;
+        display: grid;
+        gap: 0;
+      }
+
+      .order-text-list:empty {
+        display: none;
+      }
+
+      .order-text-row {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        align-items: center;
+        gap: 12px;
+        padding: 14px 0 15px;
+        border-top: 1.5px solid var(--clove-purple);
+      }
+
+      .order-text-row:last-child {
+        border-bottom: 1.5px solid var(--clove-purple);
+      }
+
+      .order-text-row__name {
+        margin: 0;
+        color: var(--clove-purple);
+        font-size: 29px;
+        font-weight: 900;
+        line-height: 0.9;
+        text-transform: uppercase;
+        transform: scaleX(0.94);
+        transform-origin: left center;
+      }
+
+      .order-text-row__meta {
+        margin: 6px 0 0;
+        color: var(--clove-purple);
+        font-size: 17px;
+        font-weight: 700;
+        line-height: 1;
+        text-transform: uppercase;
+        transform: scaleX(0.94);
+        transform-origin: left center;
+      }
+
+      .order-text-control {
+        min-width: 116px;
+        min-height: 42px;
+        display: inline-grid;
+        grid-template-columns: 58px 1fr;
+        overflow: hidden;
+        border: 1.5px solid var(--clove-purple);
+        border-radius: 999px;
+        background: var(--clove-white);
+      }
+
+      .order-text-control button {
+        min-width: 0;
+        border: 0;
+        font-weight: 900;
+        line-height: 1;
+        text-transform: uppercase;
+      }
+
+      .order-text-control__remove {
+        background: var(--clove-white);
+        color: var(--clove-purple);
+        font-size: 12px;
+        transform: scaleX(0.94);
+      }
+
+      .order-text-control__count {
+        display: grid;
+        place-items: center;
+        background: var(--clove-purple);
+        color: var(--clove-white);
+        font-size: 23px;
+      }
+
+      .empty-order {
+        margin: 48px auto 34px;
+        max-width: 300px;
+        color: var(--clove-purple);
+        font-size: 30px;
+        font-weight: 800;
+        line-height: 0.95;
+        text-align: center;
+        text-transform: uppercase;
+        transform: scaleX(0.94);
+        padding: 30px 18px;
+        border: 1.5px solid rgba(234, 111, 35, 0.45);
+        background: var(--clove-white);
+        box-shadow: 0 10px 0 rgba(234, 111, 35, 0.05);
+      }
+
+      .order-actions {
+        display: grid;
+        justify-items: center;
+        gap: 10px;
+        margin-top: 24px;
+      }
+
+      .clear-button,
+      .back-button {
+        width: min(86vw, 360px);
+        font-size: clamp(16px, 4.9vw, 25px);
+      }
+
+      .clear-button {
+        background: transparent;
+      }
+
+      .total-bar {
+        position: static;
+        width: min(100%, 520px);
+        margin: 44px auto 0;
+        display: none;
+        justify-content: center;
+        pointer-events: auto;
+      }
+
+      .order-page:not([hidden]) .total-bar {
+        display: flex;
+      }
+
+      .total-bar__inner {
+        width: min(100%, 390px);
+        min-height: 0;
+        position: relative;
+        /* 42px in alto: lo sticker "TOT" ci sta sopra senza toccare "TOTALE:" nemmeno a 320px */
+        padding: 42px 20px 8px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
+        background: transparent;
+        color: var(--clove-purple);
+        pointer-events: auto;
+        isolation: isolate;
+        transform: rotate(1deg);
+      }
+
+      .total-bar__inner::before {
+        content: "TOT";
+        position: absolute;
+        top: 0;
+        right: clamp(4px, 3%, 18px);
+        padding: 4px 10px 6px;
+        border: 1.5px solid var(--clove-purple);
+        border-radius: 999px;
+        background: var(--clove-cream);
+        color: var(--clove-purple);
+        font-size: 16px;
+        font-weight: 900;
+        line-height: 0.9;
+        z-index: 3;
+        transform: rotate(-8deg) scaleX(0.94);
+      }
+
+      .total-bar__inner::after {
+        content: "";
+        width: min(78%, 286px);
+        height: 1.5px;
+        margin-top: 4px;
+        background: var(--clove-purple);
+        transform: rotate(-1deg);
+      }
+
+      .total-label,
+      .total-value {
+        font-weight: 900;
+        line-height: 0.85;
+        letter-spacing: 0;
+        text-transform: uppercase;
+        transform: scaleX(0.94);
+      }
+
+      .total-label {
+        font-size: clamp(26px, 8.6vw, 46px);
+      }
+
+      .total-value {
+        position: relative;
+        z-index: 1;
+        font-size: clamp(44px, 16vw, 88px);
+      }
+
+      @media (max-width: 374px) {
+        .menu-header {
+          gap: 6px;
+          padding-right: 10px;
+          padding-left: 10px;
+        }
+
+        .menu-link {
+          padding-right: 7px;
+          padding-left: 7px;
+        }
+
+        .header-actions {
+          gap: 4px;
+        }
+
+        .allergen-link {
+          font-size: 10px;
+        }
+
+        .language-link {
+          min-width: 30px;
+          padding-right: 5px;
+          padding-left: 5px;
+          font-size: 15px;
+        }
+
+        .order-menu-link {
+          font-size: 10px;
+        }
+
+        .product-grid {
+          gap: 14px;
+          padding-right: 12px;
+          padding-left: 12px;
+        }
+
+        .product-card__image-wrap {
+          padding: 54px 8px 8px;
+        }
+
+        .product-card__badge {
+          top: 14px;
+          left: 14px;
+          font-size: 15px;
+        }
+
+        .product-card__body {
+          padding: 13px 14px 16px;
+        }
+
+        .product-card__kicker {
+          gap: 4px 9px;
+          font-size: 12.5px;
+        }
+
+        .product-card__allergens {
+          font-size: 11.5px;
+        }
+
+        .product-card__title {
+          font-size: clamp(28px, 9.6vw, 36px);
+        }
+
+        .product-card__price {
+          font-size: clamp(36px, 10.8vw, 42px);
+        }
+
+        .product-card__description {
+          font-size: 15px;
+        }
+
+        .order-grid {
+          gap: 10px;
+        }
+
+        .order-title {
+          margin-bottom: 12px;
+          font-size: clamp(22px, 7.8vw, 26px);
+        }
+
+        .order-note {
+          margin-bottom: 30px;
+          font-size: 22px;
+        }
+
+        .order-card {
+          min-height: 190px;
+        }
+
+        .order-text-row {
+          gap: 8px;
+        }
+
+        .order-text-row__name {
+          font-size: 25px;
+        }
+
+        .order-text-control {
+          min-width: 102px;
+        }
+
+        .compact-list {
+          gap: 10px;
+          padding-right: 12px;
+          padding-left: 12px;
+        }
+
+        .compact-row {
+          gap: 7px 9px;
+          padding: 12px 13px;
+        }
+
+        .compact-row__name {
+          font-size: 16.5px;
+        }
+
+        .compact-price {
+          font-size: 19px;
+        }
+
+        .compact-add {
+          min-width: 86px;
+          padding-right: 12px;
+          padding-left: 12px;
+          font-size: 17px;
+        }
+
+        .compact-quantity {
+          min-width: 100px;
+        }
+
+        .service-strip {
+          padding-right: 13px;
+          padding-left: 13px;
+        }
+
+        .combo-menu-section {
+          padding-top: 16px;
+          padding-right: 14px;
+          padding-left: 14px;
+        }
+
+        .combo-menu-title {
+          width: 100%;
+          height: auto;
+        }
+
+        .combo-menu-title__image {
+          width: 100%;
+          max-width: 100%;
+          height: auto;
+        }
+
+        .combo-menu-copy {
+          margin-top: 8px;
+          font-size: 25px;
+        }
+
+        .combo-menu-sub {
+          font-size: 15px;
+        }
+
+        .combo-filter {
+          gap: 8px;
+        }
+
+        .combo-filter__button {
+          min-height: 38px;
+        }
+
+        .combo-card__image-wrap {
+          min-height: 0;
+          padding: 54px 8px 8px;
+        }
+
+        .combo-card__image {
+          width: min(100%, 430px);
+          max-height: none;
+        }
+
+        .combo-card__badge {
+          top: 14px;
+          left: 14px;
+          font-size: 15px;
+        }
+
+        .combo-card__title {
+          font-size: clamp(36px, 10.8vw, 42px);
+        }
+
+        .category-title-section {
+          padding-right: 12px;
+          padding-left: 12px;
+          gap: 10px;
+        }
+
+        .category-title {
+          font-size: clamp(25px, 7.4vw, 32px);
+        }
+      }
+
+      @media (min-width: 480px) {
+        .menu-header {
+          gap: 14px;
+          padding-right: 18px;
+          padding-left: 18px;
+        }
+
+        .header-actions {
+          gap: 7px;
+        }
+
+        .menu-link {
+          padding-right: 11px;
+          padding-left: 11px;
+        }
+
+        .allergen-link,
+        .order-menu-link {
+          font-size: 13px;
+        }
+      }
+
+      @media (min-width: 560px) {
+        .app-shell {
+          width: var(--app-max-width);
+          margin: 0 auto;
+          border-right: 1px solid rgba(234, 111, 35, 0.12);
+          border-left: 1px solid rgba(234, 111, 35, 0.12);
+        }
+
+        .combo-menu-header,
+        .combo-filter {
+          width: min(100%, 760px);
+        }
+
+        .combo-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .combo-card__image-wrap {
+          min-height: 0;
+        }
+
+        .combo-card__image {
+          width: min(100%, 560px);
+          max-height: none;
+        }
+
+      }
+
+      /* ===================================================================
+         SUPPLICAMY — override di pelle sul CSS ereditato da Clove
+         (colore testo piccolo, prezzi, stato SEGNATO, badge veg, link app)
+         =================================================================== */
+
+      /* Testo piccolo in inchiostro: l'arancio su beige non regge sotto i 18px */
+      .product-card__description,
+      .compact-row__meta,
+      .compact-row__allergens,
+      .combo-card__description,
+      .allergen-name,
+      .order-text-row__meta,
+      .combo-recap__empty,
+      .order-card__recap-text,
+      .order-thumb__name {
+        color: var(--sup-ink);
+      }
+
+      /* Prezzi in rosso */
+      .product-card__price,
+      .combo-card__price,
+      .compact-price,
+      .combo-recap__price,
+      .total-value {
+        color: var(--sup-red);
+      }
+
+      .product-card__price,
+      .order-title,
+      .total-value {
+        font-weight: 950;
+      }
+
+      /* Stato SEGNATO / in carrello: giallo con testo inchiostro */
+      .qty-number,
+      .compact-quantity__count,
+      .order-text-control__count,
+      .mark-button.is-selected,
+      .compact-add.is-selected {
+        background: var(--sup-yellow);
+        color: var(--sup-ink);
+      }
+
+      .combo-card.is-in-cart {
+        border-color: var(--sup-orange);
+        box-shadow: 0 10px 0 rgba(234, 111, 35, 0.14), inset 0 0 0 1.5px var(--sup-orange);
+        background: linear-gradient(180deg, rgba(255, 198, 26, 0.42), rgba(255, 198, 26, 0.12));
+      }
+
+      /* Timbro "SEGNATO x N": rosso */
+      .combo-card__marked {
+        border-color: var(--sup-red);
+        background: var(--sup-red);
+        color: var(--sup-cream);
+        box-shadow: 2px 4px 0 rgba(212, 38, 31, 0.22);
+      }
+
+      /* Badge veg (Clove lo chiama "plant"): giallo con bordo inchiostro */
+      .plant-badge {
+        background: var(--sup-yellow);
+      }
+
+      /* Pill "ORDINA DALL'APP" in fondo alla pagina ordine */
+      .order-link--app {
+        width: min(86vw, 360px);
+        min-height: 50px;
+        display: inline-grid;
+        place-items: center;
+        padding: 6px 18px 8px;
+        border-color: var(--sup-ink);
+        background: var(--sup-yellow);
+        color: var(--sup-ink);
+        font-size: 20px;
+        text-decoration: none;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          animation-duration: 1ms !important;
+          scroll-behavior: auto !important;
+          transition-duration: 1ms !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="app-shell">
+      <header class="menu-header" aria-label="Header menu">
+        <a class="brand-logo" href="#menu-view" aria-label="Supplicamy">
+          <img src="img/logo-supplicamy-ink.svg" alt="Supplicamy">
+        </a>
+        <div class="header-actions">
+          <button class="menu-link language-link" type="button" data-language-toggle aria-label="Switch to English" title="English">🇬🇧</button>
+          <button class="menu-link allergen-link" type="button" data-open-allergens aria-label="Apri lista allergeni">ALLERGENI</button>
+          <button class="menu-link order-menu-link" type="button" data-menu-button aria-label="Vai ai tuoi suppli">
+            <span data-menu-button-label>ORDINE</span>
+            <span class="order-count" data-order-count hidden>0</span>
+          </button>
+        </div>
+      </header>
+
+      <section class="view" id="menu-view" aria-label="Menu Supplicamy">
+        <nav class="category-rail" aria-label="Categorie menu">
+          <button class="category-link is-active" type="button" data-scroll-target="menu-combo">MENU</button>
+          <button class="category-link" type="button" data-scroll-target="suppli">SUPPLÌ</button>
+          <button class="category-link" type="button" data-scroll-target="special">SPECIAL</button>
+          <button class="category-link" type="button" data-scroll-target="pale">PALE</button>
+          <button class="category-link" type="button" data-scroll-target="fritti">FRITTI</button>
+          <button class="category-link" type="button" data-scroll-target="dolci">DOLCI</button>
+          <button class="category-link" type="button" data-scroll-target="bevande">BEVANDE</button>
+          <button class="category-link" type="button" data-scroll-target="birre">BIRRE</button>
+        </nav>
+
+        <section class="service-strip" aria-label="Informazioni Supplicamy">
+          <div class="service-strip__line">
+            <span>VIALE PARIOLI 69</span>
+            <span>ROMA</span>
+          </div>
+          <div class="service-strip__line">
+            <span>RISO CARNAROLI</span>
+            <span>100% LIEVITO MADRE</span>
+          </div>
+          <div class="service-strip__line service-strip__line--social">
+            <span class="ig-follow" data-follow-label>SEGUICI</span>
+            <div class="ig-links">
+            <a class="ig-link" href="https://www.instagram.com/supplicamy/" target="_blank" rel="noreferrer" aria-label="Apri @supplicamy su Instagram">
+              <svg class="ig-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="2.5" y="2.5" width="19" height="19" rx="5.5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.5" cy="6.5" r="1.3" fill="currentColor" stroke="none"/></svg>
+              <span>@SUPPLICAMY</span>
+            </a>
+            <a class="ig-link" href="https://www.instagram.com/amaliacostantini/" target="_blank" rel="noreferrer" aria-label="Apri @amaliacostantini su Instagram">
+              <svg class="ig-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="2.5" y="2.5" width="19" height="19" rx="5.5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.5" cy="6.5" r="1.3" fill="currentColor" stroke="none"/></svg>
+              <span>@AMALIACOSTANTINI</span>
+            </a>
+            </div>
+          </div>
+        </section>
+
+        <section class="combo-menu-section" id="menu-combo" data-category="menu-combo" aria-label="Menu Supplicamy">
+          <header class="combo-menu-header">
+            <h1 class="combo-menu-title">
+              <img class="combo-menu-title__image" src="img/MENU-title.png" alt="MENU">
+            </h1>
+            <p class="combo-menu-copy">Scegli una box</p>
+            <p class="combo-menu-sub">OPPURE FATTE SERVÌ</p>
+          </header>
+
+          <div class="combo-filter" role="tablist" aria-label="Filtra menu">
+            <button class="combo-filter__button is-active" type="button" role="tab" aria-selected="true" data-combo-period="pranzo">Pranzo</button>
+            <button class="combo-filter__button" type="button" role="tab" aria-selected="false" data-combo-period="aperitivo">Aperitivo</button>
+            <button class="combo-filter__button" type="button" role="tab" aria-selected="false" data-combo-period="cena">Cena</button>
+          </div>
+
+          <div class="combo-grid" id="combo-grid"></div>
+        </section>
+
+        <div id="product-list"></div>
+
+        <section class="order-cta-section" aria-label="Vai al tuo ordine">
+          <button class="order-link" type="button" data-open-order>IL TUO ORDINE →</button>
+        </section>
+      </section>
+
+      <section class="view order-page" id="order-view" aria-label="Il tuo ordine" hidden>
+        <h1 class="order-title">IL TUO ORDINE:</h1>
+        <p class="order-note">Mostralo al banco o ordina dall'app: supplicamy.ipratico.com</p>
+        <div class="order-grid" id="order-grid"></div>
+        <div class="order-text-list" id="order-text-list"></div>
+        <p class="empty-order" id="empty-order" hidden>NESSUN PRODOTTO SEGNATO</p>
+        <div class="total-bar" aria-live="polite">
+          <div class="total-bar__inner">
+            <span class="total-label">TOTALE:</span>
+            <span class="total-value" id="total-value">0,00€</span>
+          </div>
+        </div>
+        <div class="order-actions">
+          <a class="order-link order-link--app" href="https://supplicamy.ipratico.com/#/order" target="_blank" rel="noreferrer" data-order-app>ORDINA DALL'APP →</a>
+          <button class="clear-button" type="button" data-clear-order>SVUOTA</button>
+          <button class="back-button" type="button" data-back-menu>TORNA AL MENU</button>
+        </div>
+      </section>
+
+      <section class="view allergen-page" id="allergen-view" aria-label="Lista allergeni" hidden>
+        <h1 class="allergen-title">ALLERGENI</h1>
+        <ol class="allergen-list" data-allergen-list></ol>
+        <div class="order-actions">
+          <button class="back-button" type="button" data-back-allergens>TORNA AL MENU</button>
+        </div>
+      </section>
+    </main>
+
+    <button class="floating-arrow" type="button" data-floating-arrow aria-label="Torna all'inizio">
+      <img src="img/FRECCIA.svg" alt="">
+    </button>
+
+    <div class="order-transition" data-order-transition hidden aria-hidden="true">
+      <p class="order-transition__text">TIENI IL CONTO<br>DEI TUOI SUPPLÌ</p>
+    </div>
+
+    <script>
+      const storageKey = "supplicamy-menu-order-v1";
+      const comboStorageKey = "supplicamy-menu-combo-config-v1";
+      const languageStorageKey = "supplicamy-menu-language-v1";
+
+      const categories = [
+        { id: "menu-combo", label: "MENU", labelEn: "MENU" },
+        { id: "suppli", label: "SUPPLÌ", labelEn: "SUPPLÌ" },
+        { id: "special", label: "SPECIAL", labelEn: "SPECIAL" },
+        { id: "pale", label: "PALE", labelEn: "PALE" },
+        { id: "fritti", label: "FRITTI", labelEn: "FRIED" },
+        { id: "dolci", label: "DOLCI", labelEn: "SWEET" },
+        { id: "bevande", label: "BEVANDE", labelEn: "DRINKS" },
+        { id: "birre", label: "BIRRE", labelEn: "BEERS" }
+      ];
+
+      const allergenLegend = [
+        { code: "1", name: "Cereali contenenti glutine", nameEn: "Cereals containing gluten" },
+        { code: "2", name: "Crostacei", nameEn: "Crustaceans" },
+        { code: "3", name: "Uova", nameEn: "Eggs" },
+        { code: "4", name: "Pesce", nameEn: "Fish" },
+        { code: "5", name: "Arachidi", nameEn: "Peanuts" },
+        { code: "6", name: "Soia", nameEn: "Soybeans" },
+        { code: "7", name: "Latte", nameEn: "Milk" },
+        { code: "8", name: "Frutta a guscio", nameEn: "Nuts" },
+        { code: "9", name: "Sedano", nameEn: "Celery" },
+        { code: "10", name: "Senape", nameEn: "Mustard" },
+        { code: "11", name: "Sesamo", nameEn: "Sesame" },
+        { code: "12", name: "Anidride solforosa e solfiti", nameEn: "Sulphur dioxide and sulphites" },
+        { code: "13", name: "Lupini", nameEn: "Lupin" },
+        { code: "14", name: "Molluschi", nameEn: "Molluscs" }
+      ];
+
+      const uiCopy = {
+        it: {
+          allergens: "ALLERGENI",
+          order: "ORDINE",
+          menu: "MENU",
+          mark: "SEGNA",
+          remove: "TOGLI",
+          addMore: "Aggiungi ancora",
+          add: "Aggiungi",
+          goToOrder: "IL TUO ORDINE →",
+          orderTitle: "IL TUO ORDINE:",
+          orderNote: "Mostralo al banco o ordina dall'app: supplicamy.ipratico.com",
+          orderApp: "ORDINA DALL'APP →",
+          emptyOrder: "NESSUN PRODOTTO SEGNATO",
+          total: "TOTALE:",
+          clear: "SVUOTA",
+          backToMenu: "TORNA AL MENU",
+          transition: "TIENI IL CONTO<br>DEI TUOI SUPPLÌ",
+          orderAria: "Vai ai tuoi supplì",
+          menuAria: "Torna al menu",
+          allergensAria: "Apri lista allergeni",
+          chooseMenu: "SCEGLI MENU",
+          close: "CHIUDI",
+          markMenu: "SEGNA MENU",
+          configureMenu: "Configura il menu qui sopra.",
+          includedDrink: "DA BERE INCLUSO",
+          optionalExtras: "EXTRA OPZIONALI",
+          selectedChoices: "scelte",
+          includedDrinkFallback: "da bere incluso",
+          tagline: "Scegli una box",
+          menuSubtitle: "OPPURE FATTE SERVÌ",
+          pranzo: "PRANZO",
+          aperitivo: "APERITIVO",
+          cena: "CENA",
+          stepSpicchi: "SUPPLÌ",
+          stepDrink: "DA BERE",
+          stepExtra: "EXTRA",
+          chosen: "SCELTI",
+          next: "AVANTI",
+          back: "INDIETRO",
+          done: "FATTO",
+          optionalHint: "FACOLTATIVO",
+          recapEmpty: "COMPONI IL TUO MENU",
+          follow: "SEGUICI",
+          stepFritto: "FRITTO",
+          frittoTag: "FRITTO",
+          includedTag: "INCLUSO",
+          skipExtras: "NESSUN EXTRA",
+          marked: "SEGNATO"
+        },
+        en: {
+          allergens: "ALLERGENS",
+          order: "ORDER",
+          menu: "MENU",
+          mark: "ADD",
+          remove: "REMOVE",
+          addMore: "Add another",
+          add: "Add",
+          goToOrder: "YOUR ORDER →",
+          orderTitle: "YOUR ORDER:",
+          orderNote: "Show it at the counter or order in the app: supplicamy.ipratico.com",
+          orderApp: "ORDER IN THE APP →",
+          emptyOrder: "NO ITEMS MARKED",
+          total: "TOTAL:",
+          clear: "CLEAR",
+          backToMenu: "BACK TO MENU",
+          transition: "KEEP TRACK<br>OF YOUR SUPPLÌ",
+          orderAria: "Go to your order",
+          menuAria: "Back to menu",
+          allergensAria: "Open allergen list",
+          chooseMenu: "CHOOSE MENU",
+          close: "CLOSE",
+          markMenu: "ADD MENU",
+          configureMenu: "Configure your menu above.",
+          includedDrink: "DRINK INCLUDED",
+          optionalExtras: "OPTIONAL EXTRAS",
+          selectedChoices: "choices",
+          includedDrinkFallback: "included drink",
+          tagline: "Pick a box",
+          menuSubtitle: "OR GO À LA CARTE",
+          pranzo: "LUNCH",
+          aperitivo: "APERITIVO",
+          cena: "DINNER",
+          stepSpicchi: "SUPPLÌ",
+          stepDrink: "DRINK",
+          stepExtra: "EXTRA",
+          chosen: "CHOSEN",
+          next: "NEXT",
+          back: "BACK",
+          done: "DONE",
+          optionalHint: "OPTIONAL",
+          recapEmpty: "BUILD YOUR MENU",
+          follow: "FOLLOW US",
+          stepFritto: "FRIED",
+          frittoTag: "FRIED",
+          includedTag: "INCLUDED",
+          skipExtras: "NO EXTRAS",
+          marked: "ADDED"
+        }
+      };
+
+      const products = [
+        {
+          id: "ragu",
+          allergens: ["1", "3", "7", "9"],
+          category: "suppli",
+          number: "SUPPLÌ",
+          title: "RAGÙ",
+          name: "Ragù",
+          ingredients: ["RISO CARNAROLI / RAGÙ DI CARNE MISTA", "SAN MARZANO / FIORDILATTE"],
+          price: 290,
+          image: "img/prodotti/ragu.jpg",
+          className: "is-wide",
+          accent: "#EA6F23"
+        },
+        {
+          id: "bufalino",
+          allergens: ["1", "3", "7"],
+          category: "suppli",
+          number: "SUPPLÌ",
+          title: "BUFALINO",
+          name: "Bufalino",
+          ingredients: ["RISO CARNAROLI / SAN MARZANO", "BASILICO FRESCO / FIORDILATTE"],
+          price: 290,
+          image: "img/prodotti/bufalino.jpg",
+          className: "is-wide",
+          accent: "#EA6F23"
+        },
+        {
+          id: "cacio-e-pepe",
+          allergens: ["1", "3", "7"],
+          category: "suppli",
+          number: "SUPPLÌ",
+          title: "CACIO E PEPE",
+          name: "Cacio e Pepe",
+          ingredients: ["RISO CARNAROLI / PECORINO ROMANO DOP", "PEPE DI SARAWAK"],
+          price: 290,
+          image: "img/prodotti/cacio-e-pepe.jpg",
+          longTitle: true,
+          className: "is-wide",
+          accent: "#EA6F23"
+        },
+        {
+          id: "nduja",
+          allergens: ["1", "3", "7"],
+          category: "suppli",
+          number: "SUPPLÌ",
+          title: "'NDUJA",
+          name: "'Nduja",
+          ingredients: ["RISO CARNAROLI / SAN MARZANO", "'NDUJA DI SPILINGA / FIORDILATTE"],
+          price: 290,
+          image: "img/prodotti/nduja.jpg",
+          className: "is-wide",
+          accent: "#EA6F23"
+        },
+        {
+          id: "boscaiolo",
+          allergens: ["1", "3", "7"],
+          category: "suppli",
+          number: "SUPPLÌ",
+          title: "BOSCAIOLO",
+          name: "Boscaiolo",
+          ingredients: ["RISO CARNAROLI / FUNGHI CHAMPIGNON", "PISELLI / SALSICCIA"],
+          price: 350,
+          image: "img/prodotti/boscaiolo.jpg",
+          longTitle: true,
+          className: "is-wide",
+          accent: "#EA6F23"
+        },
+        {
+          id: "puttanesco",
+          allergens: ["1", "3"],
+          category: "suppli",
+          number: "SUPPLÌ",
+          title: "PUTTANESCO",
+          name: "Puttanesco",
+          ingredients: ["RISO CARNAROLI / SAN MARZANO", "CAPPERI / OLIVE"],
+          price: 290,
+          image: "img/prodotti/puttanesco.jpg",
+          longTitle: true,
+          className: "is-wide",
+          accent: "#EA6F23"
+        },
+        {
+          id: "timballo-carbonara",
+          allergens: ["1", "3", "7"],
+          category: "suppli",
+          number: "TIMBALLO",
+          title: "CARBONARA",
+          name: "Carbonara",
+          ingredients: ["BUCATINI DI GRAGNANO / UOVA BIO", "PECORINO ROMANO DOP / GUANCIALE DI SAURIS", "FONDUTA DI PECORINO"],
+          price: 450,
+          image: "img/prodotti/timballo-carbonara.jpg",
+          longTitle: true,
+          className: "is-wide",
+          accent: "#EA6F23"
+        },
+        {
+          id: "timballo-gricia",
+          allergens: ["1", "3", "7"],
+          category: "suppli",
+          number: "TIMBALLO",
+          title: "GRICIA",
+          name: "Gricia",
+          ingredients: ["BUCATINI DI GRAGNANO / PECORINO ROMANO DOP", "GUANCIALE DI SAURIS / FONDUTA DI PECORINO"],
+          price: 450,
+          image: "img/prodotti/timballo-gricia.jpg",
+          className: "is-wide",
+          accent: "#EA6F23"
+        },
+        {
+          id: "mini-suppli",
+          allergens: ["1", "3", "7"],
+          category: "suppli",
+          number: "MINI",
+          title: "MINI SUPPLÌ",
+          name: "Mini Supplì",
+          ingredients: ["SU PRENOTAZIONE ENTRO LE 13:00", "RITIRO IL GIORNO DOPO"],
+          price: 100,
+          image: "img/prodotti/_placeholder.jpg",
+          longTitle: true,
+          className: "is-wide",
+          accent: "#EA6F23"
+        },
+        {
+          id: "lasagnetta-carciofi",
+          allergens: ["1", "3", "7"],
+          category: "special",
+          number: "SPECIAL",
+          title: "LASAGNETTA CARCIOFI",
+          name: "Lasagnetta Carciofi",
+          ingredients: ["BESCIAMELLA / CARCIOFI ALLA ROMANA", "FONDUTA DI PARMIGIANO"],
+          price: 490,
+          image: "img/prodotti/lasagnetta-carciofi.jpg",
+          longTitle: true,
+          className: "is-wide",
+          accent: "#EA6F23"
+        },
+        {
+          id: "radicchio",
+          allergens: ["1", "3", "7", "8"],
+          category: "special",
+          number: "SPECIAL",
+          title: "RADICCHIO",
+          name: "Radicchio",
+          ingredients: ["RISO CARNAROLI / RADICCHIO / GORGONZOLA", "NOCI / FONDUTA DI PARMIGIANO"],
+          price: 490,
+          image: "img/prodotti/radicchio.jpg",
+          longTitle: true,
+          className: "is-wide",
+          accent: "#EA6F23"
+        },
+        {
+          id: "pala-bigusto",
+          allergens: ["1", "7"],
+          category: "pale",
+          number: "PALA",
+          title: "BIGUSTO",
+          name: "Pala Bigusto",
+          ingredients: ["DUE GUSTI A SCELTA / 100% LIEVITO MADRE"],
+          price: 990,
+          image: "img/prodotti/_placeholder.jpg",
+          className: "is-wide",
+          accent: "#EA6F23"
+        },
+        {
+          id: "marinara",
+          allergens: ["1"],
+          category: "pale",
+          number: "PALA",
+          title: "MARINARA",
+          name: "Marinara",
+          ingredients: ["POMODORO / AGLIO / OLIO / ORIGANO"],
+          price: 650,
+          image: "img/prodotti/marinara.jpg",
+          longTitle: true,
+          className: "is-wide",
+          accent: "#EA6F23"
+        },
+        {
+          id: "margherita",
+          allergens: ["1", "7"],
+          category: "pale",
+          number: "PALA",
+          title: "MARGHERITA",
+          name: "Margherita",
+          ingredients: ["POMODORO / MOZZARELLA"],
+          price: 990,
+          image: "img/prodotti/margherita.jpg",
+          longTitle: true,
+          className: "is-wide",
+          accent: "#EA6F23"
+        },
+        {
+          id: "appetitosa",
+          allergens: ["1", "7"],
+          category: "pale",
+          number: "PALA",
+          title: "APPETITOSA",
+          name: "Appetitosa",
+          ingredients: ["MOZZARELLA / JULIENNE DI PATATE", "PEPE NERO / ROSMARINO"],
+          price: 990,
+          image: "img/prodotti/appetitosa.jpg",
+          longTitle: true,
+          className: "is-wide",
+          accent: "#EA6F23"
+        },
+        {
+          id: "diavola",
+          allergens: ["1", "7"],
+          category: "pale",
+          number: "PALA",
+          title: "DIAVOLA",
+          name: "Diavola",
+          ingredients: ["POMODORO / MOZZARELLA / 'NDUJA DI SPILINGA", "OLIVE TAGGIASCHE"],
+          price: 1250,
+          image: "img/prodotti/diavola.jpg",
+          className: "is-wide",
+          accent: "#EA6F23"
+        },
+        {
+          id: "bombo",
+          allergens: ["1", "7"],
+          category: "pale",
+          number: "PALA",
+          title: "BOMBO",
+          name: "Bombo",
+          ingredients: ["MOZZARELLA / GUANCIALE", "CIPOLLA CARAMELLATA / PEPE NERO"],
+          price: 1350,
+          image: "img/prodotti/bombo.jpg",
+          className: "is-wide",
+          accent: "#EA6F23"
+        },
+        {
+          id: "boscaiola",
+          allergens: ["1", "7"],
+          category: "pale",
+          number: "PALA",
+          title: "BOSCAIOLA",
+          name: "Boscaiola",
+          ingredients: ["MOZZARELLA / FUNGHI CHAMPIGNON / SALSICCIA"],
+          price: 1390,
+          image: "img/prodotti/boscaiola.jpg",
+          longTitle: true,
+          className: "is-wide",
+          accent: "#EA6F23"
+        },
+        {
+          id: "focaccia-bianca",
+          allergens: ["1"],
+          category: "pale",
+          number: "FOCACCIA",
+          title: "BIANCA",
+          name: "Bianca",
+          ingredients: ["OLIO / ROSMARINO"],
+          price: 590,
+          image: "img/prodotti/focaccia-bianca.jpg",
+          className: "is-wide",
+          accent: "#EA6F23"
+        },
+        {
+          id: "crocchette",
+          allergens: ["1", "3", "7"],
+          category: "fritti",
+          number: "FRITTI",
+          title: "CROCCHETTE",
+          name: "Crocchette di patate",
+          ingredients: ["PATATE DI AVEZZANO / PROVOLA / MOZZARELLA", "4 PEZZI"],
+          price: 390,
+          image: "img/prodotti/crocchette.jpg",
+          longTitle: true,
+          className: "is-wide is-fritti",
+          accent: "#EA6F23"
+        },
+        {
+          id: "polpette-carne",
+          allergens: ["1", "3", "7"],
+          category: "fritti",
+          number: "FRITTI",
+          title: "POLPETTE",
+          name: "Polpette di carne",
+          ingredients: ["CARNE MACINATA / MORTADELLA / OLIVE VERDI", "4 PEZZI"],
+          price: 490,
+          image: "img/prodotti/polpette-carne.jpg",
+          className: "is-wide is-fritti",
+          accent: "#EA6F23"
+        },
+        {
+          id: "pala-nutella",
+          allergens: ["1", "7", "8", "6"],
+          category: "dolci",
+          number: "DOLCI",
+          title: "PALA NUTELLA",
+          name: "Pala Nutella",
+          ingredients: ["PALA 100% LIEVITO MADRE / NUTELLA"],
+          price: 690,
+          image: "img/prodotti/_placeholder.jpg",
+          longTitle: true,
+          className: "is-wide",
+          accent: "#EA6F23"
+        },
+        {
+          id: "ferrarelle-frizzante",
+          allergens: [],
+          category: "bevande",
+          compact: true,
+          name: "Ferrarelle Frizzante",
+          detail: "Acqua bottiglia",
+          service: "50CL",
+          price: 150
+        },
+        {
+          id: "ferrarelle-naturale",
+          allergens: [],
+          category: "bevande",
+          compact: true,
+          name: "Ferrarelle Naturale",
+          detail: "Acqua bottiglia",
+          service: "50CL",
+          price: 150
+        },
+        {
+          id: "bevande-ferrarelle-25",
+          allergens: [],
+          category: "bevande",
+          compact: true,
+          name: "Bevande Ferrarelle",
+          detail: "Bibita a scelta",
+          service: "25CL",
+          price: 250
+        },
+        {
+          id: "bevande-ferrarelle-33",
+          allergens: [],
+          category: "bevande",
+          compact: true,
+          name: "Bevande Ferrarelle",
+          detail: "Bibita a scelta",
+          service: "33CL",
+          price: 290
+        },
+        {
+          id: "coca-cola",
+          allergens: [],
+          category: "bevande",
+          compact: true,
+          name: "Coca Cola",
+          detail: "Vetro",
+          service: "33CL",
+          price: 350
+        },
+        {
+          id: "coca-cola-zero",
+          allergens: [],
+          category: "bevande",
+          compact: true,
+          name: "Coca Cola Zero",
+          detail: "Vetro",
+          service: "33CL",
+          price: 350
+        },
+        {
+          id: "becks",
+          allergens: ["1"],
+          category: "birre",
+          compact: true,
+          name: "Beck's",
+          detail: "Lager chiara / 5%",
+          service: "33CL",
+          price: 350
+        },
+        {
+          id: "moretti-ipa",
+          allergens: ["1"],
+          category: "birre",
+          compact: true,
+          name: "Moretti IPA",
+          detail: "India Pale Ale / 5,2%",
+          service: "33CL",
+          price: 390
+        },
+        {
+          id: "ichnusa-non-filtrata",
+          allergens: ["1"],
+          category: "birre",
+          compact: true,
+          name: "Ichnusa Non Filtrata",
+          detail: "Non filtrata / 5%",
+          service: "33CL",
+          price: 450
+        }
+      ];
+
+      const productTranslations = {
+        ragu: { name: "Ragù", ingredients: ["CARNAROLI RICE / MIXED MEAT RAGÙ", "SAN MARZANO / FIORDILATTE"] },
+        bufalino: { ingredients: ["CARNAROLI RICE / SAN MARZANO", "FRESH BASIL / FIORDILATTE"] },
+        "cacio-e-pepe": { ingredients: ["CARNAROLI RICE / PECORINO ROMANO DOP", "SARAWAK PEPPER"] },
+        nduja: { ingredients: ["CARNAROLI RICE / SAN MARZANO", "'NDUJA FROM SPILINGA / FIORDILATTE"] },
+        boscaiolo: { ingredients: ["CARNAROLI RICE / CHAMPIGNON MUSHROOMS", "PEAS / SAUSAGE"] },
+        puttanesco: { ingredients: ["CARNAROLI RICE / SAN MARZANO", "CAPERS / OLIVES"] },
+        "timballo-carbonara": {
+          name: "Carbonara",
+          ingredients: ["GRAGNANO BUCATINI / ORGANIC EGGS", "PECORINO ROMANO DOP / SAURIS GUANCIALE", "PECORINO FONDUE"]
+        },
+        "timballo-gricia": {
+          name: "Gricia",
+          ingredients: ["GRAGNANO BUCATINI / PECORINO ROMANO DOP", "SAURIS GUANCIALE / PECORINO FONDUE"]
+        },
+        "mini-suppli": { ingredients: ["ORDER BY 1:00 PM", "PICK UP THE NEXT DAY"] },
+        "lasagnetta-carciofi": {
+          name: "Artichoke Lasagnetta",
+          ingredients: ["BÉCHAMEL / ROMAN-STYLE ARTICHOKES", "PARMIGIANO FONDUE"]
+        },
+        radicchio: {
+          name: "Radicchio",
+          ingredients: ["CARNAROLI RICE / RADICCHIO / GORGONZOLA", "WALNUTS / PARMIGIANO FONDUE"]
+        },
+        "pala-bigusto": {
+          name: "Bigusto Pala",
+          ingredients: ["TWO TOPPINGS OF YOUR CHOICE / 100% SOURDOUGH"]
+        },
+        marinara: { ingredients: ["TOMATO / GARLIC / OLIVE OIL / OREGANO"] },
+        margherita: { ingredients: ["TOMATO / MOZZARELLA"] },
+        appetitosa: { ingredients: ["MOZZARELLA / JULIENNE POTATOES", "BLACK PEPPER / ROSEMARY"] },
+        diavola: { ingredients: ["TOMATO / MOZZARELLA / 'NDUJA FROM SPILINGA", "TAGGIASCA OLIVES"] },
+        bombo: { ingredients: ["MOZZARELLA / GUANCIALE", "CARAMELIZED ONION / BLACK PEPPER"] },
+        boscaiola: { ingredients: ["MOZZARELLA / CHAMPIGNON MUSHROOMS / SAUSAGE"] },
+        "focaccia-bianca": { name: "Bianca", ingredients: ["OLIVE OIL / ROSEMARY"] },
+        crocchette: {
+          name: "Potato croquettes",
+          ingredients: ["AVEZZANO POTATOES / PROVOLA / MOZZARELLA", "4 PIECES"]
+        },
+        "polpette-carne": {
+          name: "Meat polpette",
+          ingredients: ["MINCED MEAT / MORTADELLA / GREEN OLIVES", "4 PIECES"]
+        },
+        "pala-nutella": { name: "Nutella Pala", ingredients: ["100% SOURDOUGH PALA / NUTELLA"] },
+        "ferrarelle-frizzante": { detail: "Bottled water" },
+        "ferrarelle-naturale": { detail: "Bottled water" },
+        "bevande-ferrarelle-25": { name: "Ferrarelle soft drinks", detail: "Soft drink of your choice" },
+        "bevande-ferrarelle-33": { name: "Ferrarelle soft drinks", detail: "Soft drink of your choice" },
+        "coca-cola": { detail: "Glass bottle" },
+        "coca-cola-zero": { detail: "Glass bottle" },
+        becks: { detail: "Pale lager / 5%" },
+        "moretti-ipa": { detail: "India Pale Ale / 5.2%" },
+        "ichnusa-non-filtrata": { name: "Ichnusa Unfiltered", detail: "Unfiltered / 5%" }
+      };
+
+      products.forEach((product) => {
+        product.translations = { en: productTranslations[product.id] || {} };
+      });
+
+      const productById = new Map(products.map((product) => [product.id, product]));
+      const comboMenus = [
+        {
+          id: "la-mia-box",
+          period: "pranzo",
+          name: "La Mia BOX",
+          price: 1190,
+          image: "img/prodotti/la-mia-box.jpg",
+          include: "3 supplì + da bere",
+          includeEn: "3 supplì + drink",
+          badge: "Pranzo",
+          badgeEn: "Lunch",
+          description: "Tre supplì a scelta + bibita o birra",
+          descriptionEn: "Three supplì of your choice + soft drink or beer",
+          groups: [{ title: "Scegli 3 supplì", titleEn: "Choose 3 supplì", max: 3, products: ["ragu", "bufalino", "cacio-e-pepe", "nduja", "boscaiolo", "puttanesco", "lasagnetta-carciofi", "radicchio"] }],
+          drinks: ["Bibita Ferrarelle 33cl", "Coca Cola 33cl", "Acqua Ferrarelle 50cl", "Beck's 33cl", "Moretti IPA 33cl"],
+          drinksEn: ["Ferrarelle soft drink 33cl", "Coca Cola 33cl", "Ferrarelle water 50cl", "Beck's 33cl", "Moretti IPA 33cl"]
+        },
+        {
+          id: "box-romana",
+          period: "pranzo",
+          name: "BOX Romana",
+          price: 1490,
+          image: "img/prodotti/box-romana.jpg",
+          include: "3 SUPPLÌ + FRITTO + BIBITA",
+          includeEn: "3 SUPPLÌ + FRIED + DRINK",
+          badge: "Pranzo",
+          badgeEn: "Lunch",
+          description: "Tre supplì + crocchette o timballo + bibita o birra",
+          descriptionEn: "Three supplì + croquettes or timballo + drink",
+          groups: [
+            { title: "Scegli 3 supplì", titleEn: "Choose 3 supplì", max: 3, products: ["ragu", "bufalino", "cacio-e-pepe", "nduja", "boscaiolo", "puttanesco", "lasagnetta-carciofi", "radicchio"] },
+            { title: "Scegli il fritto", titleEn: "Choose your fried", max: 1, kind: "fritto", stepKey: "stepFritto", products: ["crocchette", "timballo-carbonara", "timballo-gricia"] }
+          ],
+          drinks: ["Bibita Ferrarelle 33cl", "Coca Cola 33cl", "Acqua Ferrarelle 50cl", "Beck's 33cl", "Moretti IPA 33cl"],
+          drinksEn: ["Ferrarelle soft drink 33cl", "Coca Cola 33cl", "Ferrarelle water 50cl", "Beck's 33cl", "Moretti IPA 33cl"]
+        },
+        {
+          id: "supplibox-aperitivo",
+          period: "aperitivo",
+          name: "SuppliBOX Aperitivo",
+          price: 1890,
+          image: "img/prodotti/supplibox-aperitivo.jpg",
+          include: "5 supplì + birra",
+          includeEn: "5 supplì + beer",
+          badge: "Aperitivo",
+          badgeEn: "Aperitivo",
+          description: "Cinque supplì assortiti + una birra",
+          descriptionEn: "Five assorted supplì + one beer",
+          groups: [{ title: "Scegli 5 supplì", titleEn: "Choose 5 supplì", max: 5, products: ["ragu", "bufalino", "cacio-e-pepe", "nduja", "boscaiolo", "puttanesco", "lasagnetta-carciofi", "radicchio"] }],
+          drinks: ["Beck's 33cl", "Moretti IPA 33cl", "Ichnusa non filtrata 33cl"],
+          drinksEn: ["Beck's 33cl", "Moretti IPA 33cl", "Ichnusa unfiltered 33cl"]
+        },
+        {
+          id: "dinner-box",
+          period: "cena",
+          name: "Dinner BOX",
+          price: 2450,
+          image: "img/prodotti/dinner-box.jpg",
+          include: "3 SUPPLÌ + PALA + 2 BIBITE",
+          includeEn: "3 SUPPLÌ + PALA + 2 DRINKS",
+          badge: "Cena",
+          badgeEn: "Dinner",
+          description: "Per due: tre supplì classici + un trancio di pala + due da bere",
+          descriptionEn: "For two: three classic supplì + a slice of pala + two drinks",
+          groups: [
+            { title: "Scegli 3 supplì classici", titleEn: "Choose 3 classic supplì", max: 3, products: ["ragu", "bufalino", "cacio-e-pepe", "nduja", "boscaiolo", "puttanesco"] },
+            { title: "Scegli la pala", titleEn: "Choose your pala", max: 1, products: ["margherita", "marinara", "appetitosa", "diavola", "bombo", "boscaiola"] }
+          ],
+          drinks: ["2 bibite Ferrarelle 33cl", "2 Coca Cola 33cl", "2 acque Ferrarelle 50cl"],
+          drinksEn: ["2 Ferrarelle soft drinks 33cl", "2 Coca Cola 33cl", "2 Ferrarelle waters 50cl"]
+        }
+      ];
+      const comboExtras = ["Crocchette +3,90€", "Polpette di carne +4,90€", "Timballo Carbonara +4,50€"];
+      const comboExtrasEn = ["Croquettes +3,90€", "Meat polpette +4,90€", "Timballo Carbonara +4,50€"];
+      const comboExtraPrices = [390, 490, 450];
+      const comboExtraImages = ["img/prodotti/crocchette.jpg", "img/prodotti/polpette-carne.jpg", "img/prodotti/timballo-carbonara.jpg"];
+      // Nomi brevi dei fritti (senza prezzo), index-allineati con comboExtras: 0 crocchette, 1 polpette, 2 timballo
+      const comboFrittoNames = ["Crocchette", "Polpette di carne", "Timballo Carbonara"];
+      const comboFrittoNamesEn = ["Croquettes", "Meat polpette", "Timballo Carbonara"];
+      function comboFrittoName(i) {
+        const list = currentLanguage === "en" ? comboFrittoNamesEn : comboFrittoNames;
+        return list[i] || "";
+      }
+      // Miniature scontornate per i drink. Solo i file effettivamente presenti sono mappati;
+      // gli altri usano il glyph SVG pulito come fallback (mai il pallino).
+      const comboDrinkAssets = new Set([
+        "img/drinks/soft-drink.png",
+        "img/drinks/acqua.png",
+        "img/drinks/birra.png"
+      ]);
+      const comboDrinkImageMap = [
+        { re: /(soft drink|bibit|coca|cola)/i, src: "img/drinks/soft-drink.png" },
+        { re: /(birra|beer|beck|moretti|ipa|ichnusa|lager)/i, src: "img/drinks/birra.png" },
+        { re: /(acqua|acque|water|ferrarelle)/i, src: "img/drinks/acqua.png" }
+      ];
+      function comboDrinkImage(label) {
+        const hit = comboDrinkImageMap.find((item) => item.re.test(label || ""));
+        return hit && comboDrinkAssets.has(hit.src) ? hit.src : "";
+      }
+      const DRINK_GLYPH_SVG = '<svg class="drink-glyph" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6.5 3h11l-1.2 6.2a4.3 4.3 0 0 1-8.6 0L6.5 3Z"/><path d="M12 15.5V20"/><path d="M8.5 20h7"/></svg>';
+      const ESAURITO_SVG = '<svg viewBox="0 0 3664.06 1499.7" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path fill="#D4261F" d="M145.51,1379.04c-5.36-34.06-10.68-68.77-15.92-104.16-5.25-35.37-10.93-73.43-17.01-114.17-6.1-40.73-13.11-86.33-21.06-136.8-5.96-37.85-11.47-72.86-16.54-105.03-5.07-32.17-9.83-62.45-14.3-90.83-4.47-28.39-9.09-55.61-13.83-81.7-4.76-26.07-9.44-51.68-14.04-76.82l381.32-60.04c1.55,13.98,3.68,30.61,6.4,49.9,2.71,19.3,5.56,38.39,8.54,57.32,3.08,19.56,6.38,39.57,9.93,60.01,3.54,20.46,6.67,37.25,9.39,50.4-13.25,2.09-26.37,4-39.34,5.71-12.98,1.73-26.07,3.79-39.27,6.18-13.2,2.41-25.97,4.42-38.32,6.03-12.35,1.63-24.36,3.35-36.03,5.19-11.68,1.84-22.24,3.5-31.7,4.99l-1.57-176.23c3.38,21.45,6.66,42.27,9.83,62.45,3.18,20.2,6.36,40.38,9.54,60.56,3.18,20.2,6.31,40.07,9.39,59.61,3.08,19.56,6.13,38.96,9.16,58.19,3.03,19.25,6.03,38.32,9.01,57.25,4.27,27.13,8.47,53.79,12.59,79.95,4.12,26.18,8.22,52.2,12.29,78.06,4.07,25.87,8.02,50.95,11.85,75.22,3.82,24.29,7.58,48.11,11.25,71.44l-55.1-177.5c10.72-1.69,21.76-3.43,33.12-5.21,11.35-1.79,23.47-3.85,36.35-6.21,12.87-2.34,25.95-4.57,39.19-6.66,13.25-2.09,26.31-4.29,39.19-6.66,12.87-2.35,25.31-4.47,37.3-6.36,1.85,15.88,4.52,34.85,7.99,56.92,3.48,22.09,6.91,43.85,10.28,65.29,3.28,20.82,6.68,42.43,10.21,64.82,3.53,22.4,6.94,42.06,10.26,58.99l-380.37,59.9ZM276.68,888.1c11.35-1.79,23.02-3.62,35.01-5.51,11.98-1.89,23.94-3.92,35.88-6.13,11.93-2.2,23.73-4.22,35.41-6.06,11.67-1.84,22.81-3.91,33.44-6.23,10.62-2.31,20.98-4.27,31.08-5.86,1.65,14.62,4.27,33.27,7.84,55.97,3.58,22.71,7.06,45.92,10.48,69.62,3.4,23.71,6.77,44.02,10.08,60.96-8.94.77-18.95,1.86-30.03,3.27-11.09,1.43-22.5,2.9-34.21,4.42-11.73,1.53-23.6,3.08-35.63,4.64-12.04,1.58-24.05,3.3-36.03,5.19-11.99,1.89-23.66,3.72-35.01,5.51l-28.31-179.78Z"/><path fill="#D4261F" d="M721.12,1121.14c1.96-1.92,3.34-4.41,4.16-7.44.81-3.04,1.32-7,1.52-11.88.2-4.88-.24-10.78-1.34-17.73-1.49-9.46-3.47-17.88-5.92-25.25-2.46-7.37-5.4-13.7-8.81-18.98-3.42-5.28-8-9.72-13.74-13.35-5.75-3.61-12.72-6.88-20.94-9.79-8.21-2.9-18.3-5.36-30.25-7.36-26.33-2.96-48.77-7.99-67.34-15.09-18.57-7.09-34.53-16.05-47.87-26.89-13.34-10.82-24.14-23.99-32.4-39.5-8.26-15.5-15.16-33.64-20.69-54.44-5.54-20.78-10.39-44.42-14.56-70.92-5.96-37.85-6.9-70.5-2.82-97.98,4.07-27.46,13.51-50.61,28.34-69.43,14.81-18.82,35.52-34.03,62.14-45.66,26.61-11.61,59.15-20.47,97.64-26.53,34.68-5.46,64.5-8.05,89.44-7.78,24.92.29,46.14,3.57,63.61,9.86,17.48,6.31,31.9,15.82,43.29,28.58,11.37,12.75,20.2,28.82,26.5,48.19,6.28,19.37,11.41,41.69,15.38,66.91,1.19,7.57,2.44,15.46,3.72,23.66,1.29,8.21,2.63,16.72,4.02,25.55,1.39,8.84,2.51,18.03,3.37,27.59-9.66.23-21.33,1.1-34.98,2.6-13.67,1.52-27.3,3.18-40.91,4.99-13.62,1.83-26.73,3.72-39.34,5.71-11.99,1.89-22.71,3.58-32.17,5.07s-17.67,2.78-24.6,3.87c-.67-8.29-1.56-16.07-2.7-23.33-1.14-7.25-2.21-14.03-3.2-20.34-1.09-6.93-2.34-12.72-3.7-17.36-1.38-4.63-3.13-8.55-5.25-11.78-2.13-3.21-4.75-5.55-7.89-7-3.14-1.45-6.29-1.92-9.44-1.42-3.16.5-5.74,1.56-7.75,3.16-2.02,1.62-3.59,3.96-4.71,7.04-1.14,3.09-1.84,6.76-2.15,11-.3,4.26,0,9.21.89,14.89,1.39,8.84,3.13,16.81,5.22,23.9,2.09,7.11,4.86,13.46,8.33,19.05,3.46,5.61,8.3,10.66,14.51,15.17,6.2,4.52,13.8,8.66,22.8,12.41,8.99,3.77,19.83,6.91,32.51,9.42,30.08,6.26,55.38,14.07,75.93,23.44,20.54,9.37,37.86,21.84,51.95,37.39,14.09,15.57,25.6,35.41,34.58,59.52,8.97,24.13,16.24,53.85,21.8,89.17,4.67,29.66,6.57,56.17,5.74,79.58-.84,23.4-5.22,43.82-13.15,61.22-7.92,17.41-19.58,32.66-34.98,45.75-15.39,13.09-35.02,23.94-58.87,32.54-23.86,8.6-51.87,15.44-84.04,20.5-34.7,5.46-64.67,8.08-89.91,7.86-25.25-.22-46.44-3.35-63.54-9.39-17.12-6.03-31.46-15.08-43.06-27.16-11.6-12.07-20.8-27.42-27.62-46.07-6.81-18.64-12.26-40.89-16.33-66.76-1.39-8.83-2.66-17.84-3.77-27.04-1.13-9.19-2.33-18.86-3.6-29.01-1.28-10.13-2.39-20.3-3.35-30.5,16.5-1.95,35.26-3.93,56.27-5.95,21.02-2.01,42.88-4.81,65.59-8.39,9.46-1.49,18.6-2.93,27.44-4.32,8.83-1.39,15.71-2.79,20.67-4.22.85,9.56,1.86,17.98,3,25.22,1.14,7.26,2.21,14.05,3.2,20.34,1.49,9.46,3.3,16.93,5.47,22.41,2.15,5.48,4.76,9.76,7.84,12.83,3.06,3.08,7.12,4.21,12.17,3.42,3.78-.6,6.65-1.85,8.62-3.78Z"/><path fill="#D4261F" d="M1246.87,1205.62c-2.09-13.25-4.46-30.33-7.1-51.24-2.66-20.91-6.06-44.62-10.23-71.11-4.17-26.49-8.85-55.16-14.03-86.03-5.19-30.85-10.8-62.45-16.87-94.79-6.06-32.33-12.47-64.78-19.21-97.34-6.75-32.54-13.44-63.82-20.1-93.8-3.68-11.06-7.65-25.95-11.88-44.67-4.25-18.72-8.15-37.33-11.7-55.85-3.56-18.5-6.87-33.34-9.92-44.5l24.83,40.7-35.96,5.66,11.12-46.36c.52,11.55,1.76,26.56,3.69,44.99,1.94,18.45,3.92,37.2,5.95,56.27,2.03,19.07,3.05,34.76,3.04,47.03,3.77,36.25,7.65,74.28,11.65,114.04,3.99,39.78,8.51,78.66,13.52,116.65,5.01,38,9.88,74.08,14.62,108.24,4.73,34.16,9.41,64.94,14.05,92.33,4.63,27.39,8.61,49.55,11.92,66.48l-221.41,34.87c-.92-26.35-2.4-57.32-4.44-92.87-2.05-35.55-4.2-73.84-6.45-114.86-2.26-41.01-4.77-82.64-7.54-124.87-2.77-42.23-5.58-83.63-8.41-124.25-2.85-40.59-5.73-78.44-8.67-113.54-2.95-35.08-5.48-65.56-7.61-91.41-2.13-25.85-4.19-45.07-6.18-57.69l376.59-59.3c2.71,13.15,7.34,32.3,13.89,57.45,6.54,25.15,14.12,54.84,22.75,89.02,8.61,34.2,17.95,70.87,27.99,110.01,10.04,39.14,20.26,79.4,30.65,120.75,10.39,41.36,20.78,81.74,31.2,121.14,10.4,39.42,20.24,76.17,29.48,110.26,9.25,34.1,17.53,64.15,24.86,90.14l-244.12,38.44ZM1072.75,928.08c11.72-1.51,24.23-3.16,37.52-4.94,13.3-1.76,26.12-3.46,38.47-5.09,12.35-1.61,23.26-3.18,32.72-4.67,8.83-1.39,19.23-3.03,31.22-4.92,11.98-1.89,24.28-3.82,36.9-5.81,12.61-1.99,24.89-4.07,36.83-6.28,11.93-2.2,21.9-4.57,29.91-7.13l33.19,179.98c-11.45,1.17-23.52,2.58-36.18,4.24-12.67,1.68-25.29,3.67-37.85,5.96-12.57,2.31-24.53,4.35-35.88,6.14-11.35,1.79-21.76,3.43-31.22,4.92-8.21,1.29-18.14,2.86-29.81,4.69-11.68,1.84-24.15,3.65-37.45,5.41-13.3,1.78-26.23,3.81-38.79,6.11-12.58,2.31-24.17,4.62-34.79,6.93l-26.56-181.02c9.46-1.49,20.04-2.99,31.77-4.52Z"/><path fill="#D4261F" d="M1874.11,379.6c5.03,36.06,10.44,73.5,16.24,112.35,5.78,38.84,12.91,85.08,21.35,138.69,3.28,20.82,7.13,45.27,11.55,73.33,4.42,28.08,9.14,57.07,14.18,86.98,5.03,29.92,9.59,57.81,13.66,83.67,5.27,33.44,7.49,62.98,6.69,88.64-.81,25.67-5.05,47.99-12.73,66.97-7.67,19-19.79,35.45-36.35,49.36-16.56,13.93-38.03,25.38-64.4,34.38-26.39,9-58.82,16.53-97.29,22.59-37.85,5.96-70.86,8.73-99.05,8.33-28.18-.41-52.3-4.69-72.32-12.85-20.04-8.15-36.78-20.06-50.23-35.72-13.46-15.65-24.36-35.59-32.69-59.82-8.34-24.21-15.14-53.04-20.41-86.48-4.07-25.86-8.47-53.77-13.19-83.74-4.72-29.95-9.14-59-13.23-87.12-4.11-28.11-7.8-52.59-11.07-73.41-8.44-53.61-16.17-99.59-23.17-137.92-7-38.32-13.39-75.78-19.15-112.37l230.87-36.35c3.78,23.98,7.54,48.92,11.3,74.82,3.75,25.92,7.75,52.28,11.97,79.08,4.22,26.82,8.26,53.49,12.12,80.03,3.85,26.54,7.61,52.47,11.27,77.74,3.65,25.29,7.33,49.6,11,72.93,3.68,23.34,7.1,45.11,10.28,65.29,1.19,7.57,2.81,13.78,4.87,18.63,2.05,4.86,4.52,8.18,7.39,9.99,2.86,1.82,6.82,2.32,11.88,1.52,3.78-.6,7.07-2.23,9.89-4.95,2.8-2.7,4.29-6.64,4.44-11.85.15-5.19-.37-11.58-1.56-19.15-3.18-20.18-6.6-41.94-10.28-65.29-3.67-23.33-7.66-47.59-11.95-72.78-4.3-25.17-8.68-51-13.16-77.44-4.5-26.44-8.82-52.91-12.99-79.41-4.17-26.49-8.29-52.66-12.37-78.54-4.07-25.86-8.05-51.09-11.92-75.7l218.57-34.42Z"/><path fill="#D4261F" d="M2180.67,331.33c33.43-5.26,62.57-6.94,87.45-5.04,24.86,1.9,46.66,8.99,65.4,21.22,18.73,12.25,34.17,31.32,46.34,57.19,12.15,25.89,21.51,59.64,28.07,101.27,7.35,46.69,9.84,85.08,7.47,115.18-2.38,30.12-9.81,53.75-22.29,70.9-12.49,17.16-30.94,30.42-55.32,39.74-24.39,9.34-54.61,16.52-90.66,21.55l67.1-54.2,11.77,74.75-79.62-25.28c33.09-3.27,61.61-4.85,85.55-4.75,23.93.11,43.92,3.92,59.98,11.4,16.04,7.5,29.37,19.3,40,35.4,10.61,16.12,19.83,38.74,27.66,67.88,2.91,14.42,6.34,31,10.26,49.78,3.93,18.77,8.11,37.19,12.58,55.23,4.45,18.06,8.3,33.28,11.56,45.69l-187.35,29.5c-8.84,1.39-16.16,1.09-21.96-.91-5.81-1.99-10.48-5.94-13.99-11.86-3.52-5.9-6.17-14.54-7.96-25.9-6.34-31.97-11.68-58.77-16.05-80.38-4.37-21.61-8.26-39.09-11.66-52.47-3.41-13.36-6.89-23.16-10.44-29.38-3.57-6.22-7.46-10.46-11.7-12.7-4.23-2.24-8.88-2.97-13.92-2.17-1.27.2-2.69.42-4.26.67-1.58.25-3,.47-4.26.67-1.27.2-2.34.54-3.24,1-.89.47-1.79.93-2.69,1.39-.9.47-1.98.8-3.24.99l-28.12-147.81c3.25.14,6,.19,8.27.15,2.25-.02,4.48-.22,6.7-.57,2.2-.35,4.26-.67,6.15-.97s4.41-.69,7.57-1.19c8.19-1.29,14.16-4.49,17.88-9.6,3.71-5.1,5.4-13.94,5.04-26.49-.37-12.55-2.43-30.8-6.2-54.78-2.68-17.03-5.34-30.82-7.98-41.41-2.63-10.57-5.69-18.65-9.15-24.25-3.47-5.59-7.4-9.02-11.8-10.26-4.41-1.25-9.12-1.47-14.17-.68-1.89.3-4.26.67-7.1,1.12-2.84.45-5.98,1.11-9.39,1.96-3.42.87-7.16,1.78-11.21,2.73-4.06.97-7.97,1.74-11.75,2.34-3.78.6-7.4,1.33-10.81,2.19-3.42.87-6.08,1.44-7.97,1.74l35.58-51.18c9.36,55.42,18.43,110.88,27.17,166.38,8.74,55.51,17.73,108.57,27,159.14,9.25,50.59,17.93,97.54,26.06,140.86,8.11,43.33,16.27,80.83,24.5,112.5l-224.25,35.31c-4.74-34.16-9.73-68.92-14.97-104.3-5.25-35.37-11.07-73.41-17.48-114.09-6.41-40.69-13.58-86.25-21.53-136.73-11.82-75.06-22.07-140.19-30.77-195.39-8.69-55.19-17.7-108.24-27-159.14l279.13-43.95Z"/><path fill="#D4261F" d="M2510.97,1006.56c-3.35-25.32-6.93-51.1-10.72-77.34-3.81-26.22-8.11-53.51-12.89-81.85-4.79-28.33-9.71-58.59-14.78-90.76-5.07-32.17-10.58-67.18-16.54-105.03-5.96-37.85-11.47-72.86-16.54-105.03-5.07-32.17-9.71-62.62-13.91-91.38-4.21-28.75-8.5-56.02-12.89-81.85-4.4-25.81-8.89-51.28-13.49-76.42l234.66-36.95c3.97,25.24,7.83,50.81,11.59,76.72,3.75,25.92,7.71,53.09,11.87,81.52,4.14,28.44,8.76,58.74,13.83,90.91,5.07,32.17,10.58,67.18,16.54,105.03,5.96,37.85,11.47,72.86,16.54,105.03,5.07,32.17,10.01,62.59,14.85,91.23,4.83,28.66,9.46,56.05,13.91,82.17,4.43,26.13,8.64,51.82,12.62,77.04l-234.66,36.95Z"/><path fill="#D4261F" d="M3018.03,199.47c2.78,17.67,5.92,38.67,9.44,63,3.5,24.34,7.1,48.18,10.78,71.51,3.78,23.98,7.82,48.71,12.17,74.2,4.33,25.5,8,47.71,10.98,66.63-22.09,3.48-43.87,6.76-65.36,9.81-21.5,3.07-42.06,5.99-61.65,8.74-19.61,2.77-37.61,5.44-54.01,8.02-24.6,3.87-52.65,8.46-84.14,13.73-31.5,5.29-63.91,10.88-97.24,16.77-2.36-19.02-5.54-41.31-9.56-66.86-4.02-25.55-7.92-50.3-11.7-74.28-3.67-23.33-7.42-47.15-11.25-71.44-3.82-24.28-7.45-45.2-10.85-62.77l362.39-57.07ZM2984.55,368.62c6.26,39.74,12.52,79.48,18.77,119.22,6.26,39.74,12.54,78.67,18.87,116.78,6.32,38.12,12.32,74.18,18.01,108.19,5.67,34.01,10.83,64.72,15.47,92.11,4.63,27.39,8.36,51.04,11.17,70.96,2.8,19.92,5.23,34.25,7.25,42.98-10.83,1.05-23.54,2.42-38.15,4.07-14.62,1.67-29.64,3.7-45.09,6.13-15.46,2.44-29.81,4.69-43.05,6.78-12.63,1.99-26.49,4.17-41.63,6.56-15.14,2.38-30.08,5.07-44.8,8.02-14.73,2.97-27.71,5.65-38.97,8.08-.77-8.92-2.56-23.36-5.36-43.28-2.82-19.92-6.26-43.77-10.3-71.59-4.06-27.8-8.59-58.6-13.58-92.4-5-33.79-10.35-69.79-16.04-108.02-5.7-38.21-11.69-77.34-18-117.4-6.31-40.05-12.54-79.63-18.7-118.75l244.12-38.44Z"/><path fill="#D4261F" d="M3596.61,610.17c1.13,44.11-1.98,81.93-9.29,113.46-7.32,31.54-19.54,57.55-36.68,78.02-17.14,20.49-38.81,36.82-65.01,49.02-26.2,12.2-58.22,21.29-96.07,27.25-37.23,5.86-70.33,7.03-99.32,3.52-29.01-3.51-54.32-12.45-75.98-26.82-21.65-14.36-40.66-35.45-56.99-63.27-16.35-27.8-30.6-62.89-42.76-105.26-12.17-42.36-22.97-93.5-32.4-153.44-8.94-56.77-13.58-105.65-13.88-146.66-.32-41,3.95-75.44,12.82-103.35,8.85-27.89,21.92-50.63,39.19-68.23,17.26-17.58,38.83-31.48,64.7-41.7,25.86-10.21,56.14-18.05,90.84-23.51,42.25-6.65,80.06-7.76,113.41-3.31,33.34,4.45,62.2,17.36,86.58,38.73,24.37,21.38,45.18,53.97,62.43,97.8,17.24,43.83,31.43,101.08,42.55,171.72,9.44,59.94,14.72,111.95,15.84,156.04ZM3364.87,647.14c2.65-3.64,3.93-10.95,3.82-21.93-.12-10.97-1.43-27.56-3.96-49.8-2.53-22.22-6.72-51.94-12.59-89.17-5.26-33.43-9.88-59.68-13.86-78.78-3.98-19.08-7.53-33.39-10.64-42.93-3.12-9.52-6.48-15.46-10.08-17.81-3.61-2.34-7.29-3.21-11.08-2.62-5.06.8-8.62,2.81-10.68,6.05-2.08,3.24-3.29,9.9-3.64,19.97-.35,10.09.66,24.79,3.07,44.12,2.4,19.35,6.23,45.73,11.49,79.16,5.86,37.23,10.84,66.82,14.95,88.79,4.1,21.99,7.95,38.19,11.53,48.61,3.58,10.44,6.88,17.02,9.9,19.77,3.01,2.77,7.04,3.74,12.1,2.94,3.78-.6,7-2.71,9.66-6.37Z"/></svg>';
+      const plantProductIds = new Set(["bufalino", "cacio-e-pepe", "puttanesco", "lasagnetta-carciofi", "radicchio", "marinara", "margherita", "appetitosa", "focaccia-bianca"]);
+      const plantMenuIds = new Set([]);
+      comboMenus.forEach((menu) => {
+        productById.set(`combo-${menu.id}`, {
+          id: `combo-${menu.id}`,
+          category: "menu-combo",
+          title: menu.name,
+          name: menu.name,
+          price: menu.price,
+          image: menu.image,
+          translations: { en: { title: menu.name, name: menu.name, detail: menu.includeEn || menu.include } }
+        });
+      });
+      const cart = new Map();
+      const menuView = document.querySelector("#menu-view");
+      const orderView = document.querySelector("#order-view");
+      const allergenView = document.querySelector("#allergen-view");
+      const productList = document.querySelector("#product-list");
+      const comboGrid = document.querySelector("#combo-grid");
+      const orderGrid = document.querySelector("#order-grid");
+      const orderTextList = document.querySelector("#order-text-list");
+      const allergenList = document.querySelector("[data-allergen-list]");
+      const emptyOrder = document.querySelector("#empty-order");
+      const totalValue = document.querySelector("#total-value");
+      const menuButton = document.querySelector("[data-menu-button]");
+      const menuButtonLabel = document.querySelector("[data-menu-button-label]");
+      const orderCount = document.querySelector("[data-order-count]");
+      const languageButton = document.querySelector("[data-language-toggle]");
+      const openAllergensButton = document.querySelector("[data-open-allergens]");
+      const openOrderButton = document.querySelector("[data-open-order]");
+      const backButton = document.querySelector("[data-back-menu]");
+      const backAllergensButton = document.querySelector("[data-back-allergens]");
+      const clearButton = document.querySelector("[data-clear-order]");
+      const floatingArrow = document.querySelector("[data-floating-arrow]");
+      const orderTransition = document.querySelector("[data-order-transition]");
+      const categoryRail = document.querySelector(".category-rail");
+      let activeCategoryId = "";
+      let currentLanguage = localStorage.getItem(languageStorageKey) === "en" ? "en" : "it";
+      const comboSelections = new Map();
+
+      function copy(key) {
+        return uiCopy[currentLanguage][key];
+      }
+
+      function translated(product, field) {
+        return product.translations?.[currentLanguage]?.[field] || product[field];
+      }
+
+      function productName(product) {
+        return translated(product, "name");
+      }
+
+      function productKickerName(product) {
+        return productName(product);
+      }
+
+      /* Il kicker della card mostra gia il number (TIMBALLO/FOCACCIA/PALA): dove il nome
+         compare DA SOLO (ordine, chip del configuratore) glielo si rimette davanti,
+         cosi si legge "TIMBALLO CARBONARA" e non due volte "TIMBALLO". */
+      function productNumberPrefix(product) {
+        const number = (product.number || "").trim();
+        if (!number) return "";
+        const category = categories.find((item) => item.id === product.category);
+        if (category && (number === category.label || number === category.labelEn)) return "";
+        return number;
+      }
+
+      function withNumberPrefix(product, text) {
+        const prefix = productNumberPrefix(product);
+        if (!prefix || !text) return text || "";
+        return text.toUpperCase().startsWith(prefix.toUpperCase()) ? text : `${prefix} ${text}`;
+      }
+
+      function productFullName(product) {
+        return withNumberPrefix(product, productName(product));
+      }
+
+      function productFullTitle(product) {
+        return withNumberPrefix(product, productTitle(product));
+      }
+
+      function productDescription(product) {
+        return productIngredients(product).join(" / ");
+      }
+
+      function productTitle(product) {
+        return translated(product, "title") || productName(product);
+      }
+
+      function productDetail(product) {
+        return translated(product, "detail") || "";
+      }
+
+      function productIngredients(product) {
+        return translated(product, "ingredients") || product.ingredients || [];
+      }
+
+      function categoryLabel(categoryId) {
+        const category = categories.find((item) => item.id === categoryId);
+        if (!category) return "SUPPLICAMY";
+        return currentLanguage === "en" ? category.labelEn : category.label;
+      }
+
+      function formatPrice(cents) {
+        return `${(cents / 100).toFixed(2).replace(".", ",")}€`;
+      }
+
+      function formatAllergens(product) {
+        return product.allergens?.length ? product.allergens.join(", ") : "—";
+      }
+
+      function escapeHtml(value) {
+        return String(value)
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;")
+          .replace(/'/g, "&#39;");
+      }
+
+      function comboProductLabel(productId) {
+        const normalizedId = productId.replace(/^spicchio-(\d+)$/, "n$1");
+        const product = productById.get(normalizedId);
+        if (!product) return productId;
+        const number = product.number?.replace(/^N\./, "").trim() || "";
+        return `Spicchio ${number} - ${productName(product)}`;
+      }
+
+      function comboProductShortLabel(productId) {
+        const fr = String(productId).match(/^fritto-(\d+)$/);
+        if (fr) return comboFrittoName(Number(fr[1]));
+        const normalizedId = productId.replace(/^spicchio-(\d+)$/, "n$1");
+        const product = productById.get(normalizedId);
+        if (!product) return productId;
+        return productFullName(product);
+      }
+
+      function comboProductImage(productId) {
+        const fr = String(productId).match(/^fritto-(\d+)$/);
+        if (fr) return comboExtraImages[Number(fr[1])] || "";
+        const normalizedId = productId.replace(/^spicchio-(\d+)$/, "n$1");
+        const product = productById.get(normalizedId);
+        return product?.image || "";
+      }
+
+      function isPlantProduct(product) {
+        return plantProductIds.has(product.id);
+      }
+
+      function isPlantMenu(menu) {
+        return plantMenuIds.has(menu.id);
+      }
+
+      function renderPlantBadge(extraClass = "") {
+        return `<span class="plant-badge ${extraClass}" aria-label="Vegetariano o vegano" title="Vegetariano / vegano"></span>`;
+      }
+
+      function comboField(menu, field) {
+        return currentLanguage === "en" ? (menu[`${field}En`] || menu[field]) : menu[field];
+      }
+
+      function comboGroupTitle(group) {
+        return currentLanguage === "en" ? (group.titleEn || group.title) : group.title;
+      }
+
+      function comboDrinks(menu) {
+        return currentLanguage === "en" ? (menu.drinksEn || menu.drinks) : menu.drinks;
+      }
+
+      function comboExtraLabels() {
+        return currentLanguage === "en" ? comboExtrasEn : comboExtras;
+      }
+
+      function readComboSelection(card) {
+        if (!card) return null;
+        const productInputs = Array.from(card.querySelectorAll("[data-combo-input]:checked"))
+          .filter((input) => input.dataset.comboExtra !== "true" && input.dataset.comboGroup !== "drink");
+        const drinkInputs = Array.from(card.querySelectorAll("[data-combo-group='drink']"));
+        const selectedDrink = drinkInputs.find((input) => input.checked);
+        const extraInputs = Array.from(card.querySelectorAll("[data-combo-extra='true']"));
+        const selectedExtras = extraInputs.filter((input) => input.checked);
+
+        return {
+          products: productInputs.map((input) => input.value),
+          drinkIndex: selectedDrink ? drinkInputs.indexOf(selectedDrink) : 0,
+          extras: selectedExtras.map((input) => extraInputs.indexOf(input)).filter((index) => index >= 0)
+        };
+      }
+
+      function saveComboSelections() {
+        localStorage.setItem(comboStorageKey, JSON.stringify(Object.fromEntries(comboSelections)));
+      }
+
+      function loadComboSelections() {
+        try {
+          const saved = JSON.parse(localStorage.getItem(comboStorageKey) || "{}");
+          Object.entries(saved).forEach(([id, selection]) => {
+            if (productById.has(id)) comboSelections.set(id, selection);
+          });
+        } catch {
+          comboSelections.clear();
+        }
+      }
+
+      // Clove marcava i fritti della combo con id fittizi "fritto-N"; qui il gruppo fritto usa
+      // i veri id prodotto, quindi l'appartenenza si legge dal gruppo (kind: "fritto") del menu.
+      function comboFrittoGroupIds(menu) {
+        const ids = new Set();
+        (menu?.groups || []).forEach((group) => {
+          if (group.kind === "fritto") group.products.forEach((productId) => ids.add(productId));
+        });
+        return ids;
+      }
+
+      function comboSelectionLabels(menu, selection) {
+        if (!menu || !selection) return [];
+        const drinkLabels = comboDrinks(menu);
+        const extraLabels = comboExtraLabels();
+        const frittoIds = comboFrittoGroupIds(menu);
+        const spicchi = selection.products.filter((p) => !frittoIds.has(p)).map((p) => comboProductShortLabel(p)).filter(Boolean);
+        const polpetta = selection.products.filter((p) => frittoIds.has(p)).map((p) => comboProductShortLabel(p)).filter(Boolean);
+        const drink = drinkLabels[selection.drinkIndex] || drinkLabels[0] || copy("includedDrinkFallback");
+        const extras = selection.extras.map((index) => extraLabels[index]).filter(Boolean);
+        const rows = [];
+
+        if (spicchi.length) rows.push({ tag: copy("stepSpicchi"), text: spicchi.join(" + ") });
+        if (polpetta.length) rows.push({ tag: copy("frittoTag"), text: polpetta.join(" + ") });
+        if (menu.includedFritto != null) rows.push({ tag: copy("includedTag"), text: comboFrittoName(menu.includedFritto) });
+        if (drink) rows.push({ tag: copy("stepDrink"), text: drink });
+        if (extras.length) rows.push({ tag: "EXTRA", text: extras.join(" + ") });
+
+        return rows;
+      }
+
+      function comboSelectionExtraTotal(selection) {
+        if (!selection) return 0;
+        return selection.extras.reduce((sum, index) => sum + (comboExtraPrices[index] || 0), 0);
+      }
+
+      function comboConfiguredPrice(product) {
+        if (product.category !== "menu-combo") return product.price;
+        return product.price + comboSelectionExtraTotal(comboSelections.get(product.id));
+      }
+
+      function comboSummaryText(menu, selection) {
+        const labels = comboSelectionLabels(menu, selection);
+        return labels.length ? labels.map((item) => `${item.tag}: ${item.text}`).join(" / ") : copy("configureMenu");
+      }
+
+      function comboMenuFromProductId(productId) {
+        return comboMenus.find((menu) => `combo-${menu.id}` === productId);
+      }
+
+      function renderOrderComboRecap(productId) {
+        const menu = comboMenuFromProductId(productId);
+        const selection = comboSelections.get(productId);
+        const labels = comboSelectionLabels(menu, selection);
+        const recap = document.createElement("div");
+        recap.className = "order-card__recap";
+
+        const rows = labels.length
+          ? labels
+          : [{ tag: "MENU", text: menu ? comboField(menu, "include") : "" }];
+
+        rows.slice(0, 6).forEach((item) => {
+          const row = document.createElement("div");
+          row.className = "order-card__recap-row";
+
+          const tag = document.createElement("span");
+          tag.className = "order-card__recap-tag";
+          tag.textContent = `${item.tag}:`;
+
+          const text = document.createElement("span");
+          text.className = "order-card__recap-text";
+          text.textContent = item.text;
+
+          row.append(tag, text);
+          recap.append(row);
+        });
+
+        return recap;
+      }
+
+      function renderOrderComboThumbs(productId) {
+        const menu = comboMenuFromProductId(productId);
+        const selection = comboSelections.get(productId);
+        const wrap = document.createElement("div");
+        wrap.className = "order-card__thumbs";
+        if (!menu || !selection) return wrap;
+
+        const items = [];
+        selection.products.forEach((pid) => items.push({
+          image: comboProductImage(pid),
+          label: comboProductShortLabel(pid)
+        }));
+        if (menu.includedFritto != null) {
+          items.push({ image: comboExtraImages[menu.includedFritto], label: comboFrittoName(menu.includedFritto) });
+        }
+        const drink = comboDrinks(menu)[selection.drinkIndex] || comboDrinks(menu)[0];
+        if (drink) items.push({ image: comboDrinkImage(drink), label: drink });
+        selection.extras.forEach((index) => items.push({
+          image: comboExtraImages[index],
+          label: comboExtraLabels()[index]
+        }));
+
+        items.forEach((item) => {
+          const cell = document.createElement("div");
+          cell.className = "order-thumb";
+          if (item.image) {
+            const img = document.createElement("img");
+            img.className = "order-thumb__img";
+            img.src = item.image;
+            img.alt = item.label;
+            img.loading = "lazy";
+            img.decoding = "async";
+            cell.append(img);
+          } else {
+            const glyph = document.createElement("span");
+            glyph.className = "order-thumb__glyph";
+            glyph.innerHTML = DRINK_GLYPH_SVG;
+            cell.append(glyph);
+          }
+          const name = document.createElement("span");
+          name.className = "order-thumb__name";
+          name.textContent = item.label;
+          cell.append(name);
+          wrap.append(cell);
+        });
+
+        return wrap;
+      }
+
+      function comboQty(menuId) {
+        return cartQty(`combo-${menuId}`);
+      }
+
+      function renderComboCartControl(menu) {
+        const id = `combo-${menu.id}`;
+        const qty = cartQty(id);
+        if (qty === 0) {
+          // Nessun pulsante qui: l'azione "SEGNA MENU" è il CTA dell'ultimo step (nav).
+          return "";
+        }
+
+        return `
+          <div class="qty-control combo-card__qty">
+            <button class="qty-action" type="button" data-decrement="${id}" aria-label="${copy("remove")} ${menu.name}">${copy("remove")}</button>
+            <button class="qty-number" type="button" data-increment="${id}" aria-label="${copy("addMore")} ${menu.name}">
+              <span class="qty-value">${qty}</span>
+            </button>
+          </div>
+        `;
+      }
+
+      function updateComboActions() {
+        document.querySelectorAll("[data-combo-cart-actions]").forEach((node) => {
+          const menu = comboMenus.find((item) => item.id === node.dataset.comboCartActions);
+          if (menu) node.innerHTML = renderComboCartControl(menu);
+          const card = node.closest("[data-combo-card]");
+          if (card) {
+            updateComboFinishButton(card);
+            const qty = cartQty(`combo-${card.dataset.comboId}`);
+            card.classList.toggle("is-in-cart", qty > 0);
+            const marked = card.querySelector("[data-combo-marked]");
+            if (marked) {
+              marked.hidden = qty === 0;
+              marked.innerHTML = `${copy("marked")} &times;${qty}`;
+            }
+          }
+        });
+      }
+
+      function renderComboChip({ comboId, groupId, label, value, max, checked = false, extra = false, image = "" }) {
+        const inputType = max === 1 ? "radio" : "checkbox";
+        const name = max === 1 ? `combo-${comboId}-${groupId}` : `combo-${comboId}-${groupId}-${value}`;
+        const thumb = image
+          ? `<span class="combo-chip__thumb"><img src="${escapeHtml(image)}" alt="" loading="lazy" decoding="async"></span>`
+          : `<span class="combo-chip__thumb is-glyph">${DRINK_GLYPH_SVG}</span>`;
+        return `
+          <label class="combo-chip${checked ? " is-selected" : ""}">
+            <input
+              type="${inputType}"
+              name="${escapeHtml(name)}"
+              value="${escapeHtml(value)}"
+              data-combo-input
+              data-combo-group="${escapeHtml(groupId)}"
+              data-combo-max="${max}"
+              data-combo-extra="${extra ? "true" : "false"}"
+              ${checked ? "checked" : ""}
+            >
+            ${thumb}
+            <span class="combo-chip__name">${escapeHtml(label)}</span>
+            <span class="combo-chip__check" aria-hidden="true"></span>
+          </label>
+        `;
+      }
+
+      function renderComboStepPanel(index, title, max, chips, optional = false) {
+        const counter = optional
+          ? `<span class="combo-step__counter is-optional">${copy("optionalHint")}</span>`
+          : `<span class="combo-step__counter" data-step-counter data-step-max="${max}">0/${max} ${copy("chosen")}</span>`;
+        return `
+          <section class="combo-step" data-step-panel="${index}"${index === 0 ? "" : " hidden"}>
+            <div class="combo-step__head">
+              <h3 class="combo-step__title">${escapeHtml(title)}</h3>
+              ${counter}
+            </div>
+            <div class="combo-chip-grid">${chips}${optional ? `<button type="button" class="combo-chip combo-chip--skip" data-skip-extras><span>${copy("skipExtras")}</span><span class="combo-chip__skip-arrow" aria-hidden="true">&rarr;</span></button>` : ""}</div>
+          </section>
+        `;
+      }
+
+      function renderComboStepDot(index, label) {
+        return `
+          <button type="button" class="combo-step-dot${index === 0 ? " is-active" : ""}" data-step-dot="${index}">
+            <span class="combo-step-dot__num">${index + 1}</span>
+            <span class="combo-step-dot__label">${escapeHtml(label)}</span>
+          </button>
+        `;
+      }
+
+      function renderComboMenus(period = "pranzo") {
+        if (!comboGrid) return;
+        const visibleMenus = comboMenus.filter((item) => item.period === period);
+        comboGrid.innerHTML = visibleMenus.map((menu) => {
+          const panels = [];
+          const dots = [];
+          let stepIndex = 0;
+
+          menu.groups.forEach((group, gi) => {
+            const chips = group.products.map((productId) => renderComboChip({
+              comboId: menu.id,
+              groupId: `group-${gi}`,
+              label: comboProductShortLabel(productId),
+              value: productId,
+              max: group.max,
+              checked: false,
+              image: comboProductImage(productId)
+            })).join("");
+            panels.push(renderComboStepPanel(stepIndex, comboGroupTitle(group), group.max, chips));
+            dots.push(renderComboStepDot(stepIndex, copy(group.stepKey || "stepSpicchi")));
+            stepIndex += 1;
+          });
+
+          const drinkChips = comboDrinks(menu).map((drink, index) => renderComboChip({
+            comboId: menu.id,
+            groupId: "drink",
+            label: drink,
+            value: drink,
+            max: 1,
+            checked: false,
+            image: comboDrinkImage(drink)
+          })).join("");
+          panels.push(renderComboStepPanel(stepIndex, copy("includedDrink"), 1, drinkChips));
+          dots.push(renderComboStepDot(stepIndex, copy("stepDrink")));
+          stepIndex += 1;
+
+          const extraChips = comboExtraLabels().map((extra, index) => renderComboChip({
+            comboId: menu.id,
+            groupId: "extra",
+            label: extra,
+            value: `extra-${index}`,
+            max: comboExtras.length,
+            extra: true,
+            image: comboExtraImages[index]
+          })).join("");
+          panels.push(renderComboStepPanel(stepIndex, copy("optionalExtras"), 0, extraChips, true));
+          dots.push(renderComboStepDot(stepIndex, copy("stepExtra")));
+
+          const stepTotal = stepIndex + 1;
+          const cardQty = cartQty(`combo-${menu.id}`);
+
+          return `
+            <article class="combo-card${cardQty > 0 ? " is-in-cart" : ""}" data-combo-card data-combo-id="${escapeHtml(menu.id)}">
+              <div class="combo-card__image-wrap">
+                <span class="combo-card__badge">${escapeHtml(comboField(menu, "badge"))}</span>
+                ${isPlantMenu(menu) ? renderPlantBadge("combo-card__plant") : ""}
+                <span class="combo-card__marked" data-combo-marked${cardQty > 0 ? "" : " hidden"}>${copy("marked")} &times;${cardQty}</span>
+                <img class="combo-card__image" src="${escapeHtml(menu.image)}" alt="${escapeHtml(menu.name)}">
+              </div>
+              <div class="combo-card__body">
+                <div class="combo-card__meta">
+                  <span class="combo-card__period">${escapeHtml(comboField(menu, "badge"))}</span>
+                  <span class="combo-card__include">${escapeHtml(comboField(menu, "include"))}</span>
+                </div>
+                <h2 class="combo-card__title">${escapeHtml(menu.name)}</h2>
+                <p class="combo-card__price">${formatPrice(menu.price)}</p>
+                <p class="combo-card__description">${escapeHtml(comboField(menu, "description"))}</p>
+                ${menu.includedFritto != null ? `<p class="combo-card__included"><span class="combo-card__included-tag">${copy("includedTag")}</span><img src="${escapeHtml(comboExtraImages[menu.includedFritto])}" alt="" loading="lazy" decoding="async">${escapeHtml(comboFrittoName(menu.includedFritto))}</p>` : ""}
+                <div class="combo-card__actions">
+                  <button class="combo-card__cta" type="button" data-combo-toggle>${copy("chooseMenu")}</button>
+                </div>
+                <div class="combo-config" hidden data-combo-detail data-step="0" data-step-total="${stepTotal}">
+                  <div class="combo-config__progress">${dots.join("")}</div>
+                  <div class="combo-config__panels">${panels.join("")}</div>
+                  <div class="combo-config__nav">
+                    <button type="button" class="combo-nav__btn" data-step-prev disabled>${copy("back")}</button>
+                    <button type="button" class="combo-nav__btn is-primary" data-step-next>${copy("next")}</button>
+                  </div>
+                  <div class="combo-config__recap" data-combo-live-recap>
+                    <div class="combo-recap__list" data-recap-chips></div>
+                    <div class="combo-recap__foot">
+                      <span class="combo-recap__price" data-recap-price>${formatPrice(menu.price)}</span>
+                      <div class="combo-card__cart" data-combo-cart-actions="${escapeHtml(menu.id)}">
+                        ${renderComboCartControl(menu)}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </article>
+          `;
+        }).join("");
+        shrinkToFit();
+      }
+
+      function comboConfigEl(card) {
+        return card.querySelector("[data-combo-detail]");
+      }
+
+      function comboStepTotal(card) {
+        const cfg = comboConfigEl(card);
+        return Number(cfg?.dataset.stepTotal) || 1;
+      }
+
+      function setComboStep(card, index) {
+        const cfg = comboConfigEl(card);
+        if (!cfg) return;
+        const total = comboStepTotal(card);
+        const next = Math.max(0, Math.min(index, total - 1));
+        cfg.dataset.step = String(next);
+
+        card.querySelectorAll("[data-step-panel]").forEach((panel) => {
+          panel.hidden = Number(panel.dataset.stepPanel) !== next;
+        });
+        card.querySelectorAll("[data-step-dot]").forEach((dot) => {
+          const di = Number(dot.dataset.stepDot);
+          dot.classList.toggle("is-active", di === next);
+          dot.classList.toggle("is-done", di < next);
+        });
+
+        const prevBtn = cfg.querySelector("[data-step-prev]");
+        if (prevBtn) prevBtn.disabled = next === 0;
+        updateComboFinishButton(card);
+      }
+
+      function enforceGroupLimits(card) {
+        const groups = new Map();
+        card.querySelectorAll("[data-combo-input]").forEach((input) => {
+          const chip = input.closest(".combo-chip");
+          if (chip) chip.classList.toggle("is-selected", input.checked);
+          if (input.type !== "checkbox" || input.dataset.comboExtra === "true") return;
+          const key = input.dataset.comboGroup;
+          if (!groups.has(key)) groups.set(key, []);
+          groups.get(key).push(input);
+        });
+        groups.forEach((inputs) => {
+          const max = Number(inputs[0].dataset.comboMax) || inputs.length;
+          const checked = inputs.filter((input) => input.checked).length;
+          inputs.forEach((input) => {
+            const disable = !input.checked && checked >= max;
+            input.disabled = disable;
+            input.closest(".combo-chip")?.classList.toggle("is-disabled", disable);
+          });
+        });
+      }
+
+      function updateComboCounters(card) {
+        card.querySelectorAll("[data-step-panel]").forEach((panel) => {
+          const counter = panel.querySelector("[data-step-counter]");
+          if (!counter || !counter.dataset.stepMax) return;
+          const max = Number(counter.dataset.stepMax);
+          const checked = panel.querySelectorAll("[data-combo-input]:checked").length;
+          counter.textContent = `${checked}/${max} ${copy("chosen")}`;
+          counter.classList.toggle("is-full", checked >= max);
+        });
+      }
+
+      function renderComboLiveRecap(card) {
+        const cfg = comboConfigEl(card);
+        if (!cfg) return;
+        const menu = comboMenus.find((item) => item.id === card.dataset.comboId);
+        if (!menu) return;
+        const selection = readComboSelection(card);
+        const list = cfg.querySelector("[data-recap-chips]");
+        const priceEl = cfg.querySelector("[data-recap-price]");
+
+        if (list) {
+          const items = [];
+          selection.products.forEach((productId) => items.push({
+            image: comboProductImage(productId),
+            label: comboProductShortLabel(productId)
+          }));
+          if (menu.includedFritto != null) {
+            items.push({ image: comboExtraImages[menu.includedFritto], label: comboFrittoName(menu.includedFritto), included: true });
+          }
+          const drinkChecked = card.querySelector('[data-combo-group="drink"]:checked');
+          if (drinkChecked) {
+            const drink = drinkChecked.value;
+            items.push({ image: comboDrinkImage(drink), label: drink });
+          }
+          selection.extras.forEach((index) => items.push({
+            image: comboExtraImages[index],
+            label: comboExtraLabels()[index]
+          }));
+
+          list.innerHTML = items.length
+            ? items.map((item) => `
+                <span class="combo-recap__chip${item.included ? " is-included" : ""}">
+                  ${item.image
+                    ? `<img src="${escapeHtml(item.image)}" alt="" loading="lazy" decoding="async">`
+                    : `<span class="combo-recap__glyph">${DRINK_GLYPH_SVG}</span>`}
+                  <span class="combo-recap__chip-name">${escapeHtml(item.label)}${item.included ? ` <em>${copy("includedTag")}</em>` : ""}</span>
+                </span>
+              `).join("")
+            : `<span class="combo-recap__empty">${copy("recapEmpty")}</span>`;
+        }
+
+        if (priceEl) {
+          priceEl.textContent = formatPrice(menu.price + comboSelectionExtraTotal(selection));
+        }
+      }
+
+      function comboSelectionComplete(card) {
+        const menu = comboMenus.find((item) => item.id === card.dataset.comboId);
+        if (!menu) return false;
+        const groupsOk = menu.groups.every((group, gi) =>
+          card.querySelectorAll(`[data-combo-group="group-${gi}"]:checked`).length >= group.max);
+        const drinkOk = card.querySelectorAll('[data-combo-group="drink"]:checked').length >= 1;
+        return groupsOk && drinkOk;
+      }
+
+      // Il pulsante "next" dell'ultimo step È il CTA finale:
+      // - non ultimo step  -> "AVANTI" (naviga)
+      // - ultimo step, non in carrello -> "SEGNA MENU" (aggiunge, disabilitato finché incompleto)
+      // - ultimo step, già in carrello  -> "FATTO" (chiude il configuratore)
+      function updateComboFinishButton(card) {
+        const cfg = comboConfigEl(card);
+        if (!cfg) return;
+        const nextBtn = cfg.querySelector("[data-step-next]");
+        if (!nextBtn) return;
+        const total = comboStepTotal(card);
+        const step = Number(cfg.dataset.step);
+        const last = step === total - 1;
+        const inCart = cartQty(`combo-${card.dataset.comboId}`) > 0;
+
+        if (!last) {
+          nextBtn.textContent = copy("next");
+          nextBtn.dataset.mode = "next";
+          nextBtn.disabled = false;
+          nextBtn.classList.remove("is-done");
+          return;
+        }
+        if (inCart) {
+          nextBtn.textContent = copy("done");
+          nextBtn.dataset.mode = "close";
+          nextBtn.disabled = false;
+          nextBtn.classList.add("is-done");
+        } else {
+          nextBtn.textContent = copy("markMenu");
+          nextBtn.dataset.mode = "add";
+          nextBtn.disabled = !comboSelectionComplete(card);
+          nextBtn.classList.remove("is-done");
+        }
+      }
+
+      function initComboConfig(card) {
+        enforceGroupLimits(card);
+        updateComboCounters(card);
+        setComboStep(card, 0);
+        renderComboLiveRecap(card);
+        updateComboFinishButton(card);
+      }
+
+      function allergenLabel(product) {
+        return `${copy("allergens")} · ${formatAllergens(product)}`;
+      }
+
+      function loadCart() {
+        try {
+          const saved = JSON.parse(localStorage.getItem(storageKey) || "{}");
+          Object.entries(saved).forEach(([id, qty]) => {
+            if (productById.has(id) && Number(qty) > 0) cart.set(id, Number(qty));
+          });
+        } catch {
+          cart.clear();
+        }
+      }
+
+      function saveCart() {
+        localStorage.setItem(storageKey, JSON.stringify(Object.fromEntries(cart)));
+      }
+
+      function cartQty(id) {
+        return cart.get(id) || 0;
+      }
+
+      function cartUnits() {
+        return [...cart.values()].reduce((sum, qty) => sum + qty, 0);
+      }
+
+      function cartItems() {
+        return [...cart.entries()]
+          .map(([id, qty]) => ({ product: productById.get(id), qty }))
+          .filter((item) => item.product && item.qty > 0);
+      }
+
+      function cartTotal() {
+        return cartItems().reduce((sum, item) => sum + comboConfiguredPrice(item.product) * item.qty, 0);
+      }
+
+      function setQty(id, qty) {
+        const nextQty = Math.max(0, Number(qty) || 0);
+        if (nextQty === 0) {
+          cart.delete(id);
+          if (id.startsWith("combo-")) {
+            comboSelections.delete(id);
+            saveComboSelections();
+          }
+        } else {
+          cart.set(id, nextQty);
+        }
+        saveCart();
+        updateCartUI();
+      }
+
+      function increment(id) {
+        setQty(id, cartQty(id) + 1);
+      }
+
+      function decrement(id) {
+        setQty(id, cartQty(id) - 1);
+      }
+
+      function cardClass(product) {
+        return ["product-card", `is-${product.category}`, cartQty(product.id) > 0 ? "is-in-cart" : ""]
+          .filter(Boolean).join(" ");
+      }
+
+      function mainImage(product) {
+        return product.image || product.gallery?.[0] || "";
+      }
+
+      function renderQtyControl(product, extraClass = "") {
+        const qty = cartQty(product.id);
+        const name = productName(product);
+        if (qty === 0) {
+          return `<button class="mark-button" type="button" data-add="${product.id}">${copy("mark")}</button>`;
+        }
+
+        return `
+          <div class="qty-control ${extraClass}">
+            <button class="qty-action" type="button" data-decrement="${product.id}" aria-label="${copy("remove")} ${name}">${copy("remove")}</button>
+            <button class="qty-number" type="button" data-increment="${product.id}" aria-label="${copy("addMore")} ${name}">
+              <span class="qty-value">${qty}</span>
+            </button>
+          </div>
+        `;
+      }
+
+      /* V2: ogni prodotto e una CARD identica alle card delle BOX (.combo-card). */
+      function renderProduct(product) {
+        const title = productTitle(product);
+        const name = productName(product);
+        const kicker = product.number || categoryLabel(product.category);
+        const qty = cartQty(product.id);
+        return `
+          <section class="${cardClass(product)}" id="${product.id}" data-category="${product.category}" data-product-id="${product.id}">
+            <div class="product-card__image-wrap">
+              <span class="product-card__badge">${kicker}</span>
+              <span class="product-card__marked" data-product-marked${qty > 0 ? "" : " hidden"}>${copy("marked")} &times;${qty}</span>
+              <img class="product-card__image" src="${mainImage(product)}" alt="${name}" loading="lazy" decoding="async">
+            </div>
+            <div class="product-card__body">
+              <div class="product-card__kicker">
+                <span class="product-card__kicker-left">${kicker}</span>
+                <span class="product-card__kicker-right">${isPlantProduct(product) ? renderPlantBadge() : ""}<span class="product-card__allergens">${allergenLabel(product)}</span></span>
+              </div>
+              <h2 class="product-card__title">${title}${product.soldOut ? `<span class="soldout-stamp" aria-hidden="true">${ESAURITO_SVG}</span>` : ""}</h2>
+              <p class="product-card__price">${formatPrice(product.price)}</p>
+              <p class="product-card__description">${productDescription(product)}</p>
+              <div class="product-card__actions" data-actions-for="${product.id}">
+                ${product.soldOut ? "" : renderQtyControl(product)}
+              </div>
+            </div>
+          </section>
+        `;
+      }
+
+      function renderCompactBadges(product) {
+        return [product.service].filter(Boolean)
+          .map((label) => `<span class="compact-badge">${label}</span>`)
+          .join("");
+      }
+
+      function renderCompactRow(product) {
+        const qty = cartQty(product.id);
+        const name = productName(product);
+        const actionMarkup = qty > 0
+          ? `
+            <div class="compact-quantity">
+              <button class="compact-quantity__remove" type="button" data-decrement="${product.id}" aria-label="${copy("remove")} ${name}">${copy("remove")}</button>
+              <button class="compact-quantity__count" type="button" data-increment="${product.id}" aria-label="${copy("addMore")} ${name}">${qty}</button>
+            </div>
+          `
+          : `<button class="compact-add" type="button" data-add="${product.id}" aria-label="${copy("add")} ${name}">${copy("mark")}</button>`;
+
+        /* "· 33CL" resta attaccato: se la riga va a capo non lascia mai il formato da solo */
+        const detail = [productDetail(product), product.service].filter(Boolean).join(" ·\u00A0");
+        return `
+          <article class="compact-row" data-product-id="${product.id}" data-category="${product.category}">
+            <h3 class="compact-row__name">${name}</h3>
+            <div class="compact-price">${formatPrice(product.price)}</div>
+            <div class="compact-row__text">
+              <p class="compact-row__meta">${detail}</p>
+              <p class="compact-row__allergens">${allergenLabel(product)}</p>
+            </div>
+            <div class="compact-row__actions">
+              ${actionMarkup}
+            </div>
+          </article>
+        `;
+      }
+
+      function renderCompactSection(categoryId, title, note = "") {
+        const compactProducts = products.filter((product) => product.compact && product.category === categoryId);
+        const listMarkup = compactProducts.map((product) => renderCompactRow(product)).join("");
+
+        return `
+          <section class="compact-section" id="${categoryId}" data-category="${categoryId}" aria-label="${title}">
+            <div class="category-title-section"><h2 class="category-title">${title}</h2></div>
+            ${note ? `<p class="order-note">${note}</p>` : ""}
+            <div class="compact-list">
+              ${listMarkup}
+            </div>
+          </section>
+        `;
+      }
+
+      function renderCategoryHeader(categoryId) {
+        const title = categoryLabel(categoryId);
+        return `
+          <section class="category-title-section" id="${categoryId}" data-category="${categoryId}" aria-label="${title}">
+            <h2 class="category-title">${title}</h2>
+          </section>
+        `;
+      }
+
+      function renderMenu() {
+        const visibleProducts = products.filter((product) => !product.compact);
+        const chunks = [];
+
+        categories.forEach((category) => {
+          if (["bevande", "birre"].includes(category.id)) return;
+          const categoryProducts = visibleProducts.filter((product) => product.category === category.id);
+          if (!categoryProducts.length) return;
+          chunks.push(renderCategoryHeader(category.id));
+          chunks.push(`<div class="product-grid">${categoryProducts.map((product) => renderProduct(product)).join("")}</div>`);
+        });
+
+        chunks.push(renderCompactSection("bevande", categoryLabel("bevande")));
+        chunks.push(renderCompactSection("birre", categoryLabel("birre")));
+        productList.innerHTML = chunks.join("");
+      }
+
+      function renderAllergenPage() {
+        allergenList.innerHTML = allergenLegend
+          .map((item) => `
+            <li>
+              <span class="allergen-code">${item.code}</span>
+              <span class="allergen-name">${currentLanguage === "en" ? item.nameEn : item.name}</span>
+            </li>
+          `)
+          .join("");
+      }
+
+      function updateStaticLabels() {
+        document.documentElement.lang = currentLanguage;
+        languageButton.textContent = currentLanguage === "en" ? "🇮🇹" : "🇬🇧";
+        languageButton.setAttribute("aria-label", currentLanguage === "en" ? "Passa all'italiano" : "Switch to English");
+        languageButton.setAttribute("title", currentLanguage === "en" ? "Italiano" : "English");
+        openAllergensButton.textContent = copy("allergens");
+        openAllergensButton.setAttribute("aria-label", copy("allergensAria"));
+        openOrderButton.textContent = copy("goToOrder");
+        const orderTitle = document.querySelector(".order-title");
+        orderTitle.textContent = copy("orderTitle");
+        document.querySelector(".order-note").textContent = copy("orderNote");
+        emptyOrder.textContent = copy("emptyOrder");
+        document.querySelector(".total-label").textContent = copy("total");
+        clearButton.textContent = copy("clear");
+        backButton.textContent = copy("backToMenu");
+        backAllergensButton.textContent = copy("backToMenu");
+        document.querySelector(".allergen-title").textContent = copy("allergens");
+        document.querySelector(".order-transition__text").innerHTML = copy("transition");
+        document.querySelector(".combo-menu-copy").textContent = copy("tagline");
+        document.querySelector(".combo-menu-sub").textContent = copy("menuSubtitle");
+        const orderApp = document.querySelector("[data-order-app]");
+        if (orderApp) orderApp.textContent = copy("orderApp");
+        const followLabel = document.querySelector("[data-follow-label]");
+        if (followLabel) followLabel.textContent = copy("follow");
+        document.querySelectorAll("[data-combo-period]").forEach((button) => {
+          button.textContent = copy(button.dataset.comboPeriod);
+        });
+        document.querySelectorAll("[data-scroll-target]").forEach((button) => {
+          button.textContent = categoryLabel(button.dataset.scrollTarget);
+        });
+      }
+
+
+      /* Supplicamy V2: nessun titolo esce dal suo box e nessuna parola si spezza.
+         Se una parola non entra (scrollWidth > clientWidth) si scende di 1px alla volta, min 22px. */
+      /* §3.4 — nessuna riga della descrizione con una parola sola: si legano gli ultimi
+         token con spazi unificatori (\u00A0) finche l'ultima riga ne ha almeno due.
+         Se legare farebbe sforare il box si torna indietro e ci si ferma. */
+      function textLines(el) {
+        const node = el.firstChild;
+        if (!node || node.nodeType !== 3) return [];
+        const text = node.textContent;
+        const lines = new Map();
+        const re = /\S+/g;
+        let match;
+        while ((match = re.exec(text))) {
+          const range = document.createRange();
+          range.setStart(node, match.index);
+          range.setEnd(node, match.index + match[0].length);
+          const key = Math.round(range.getBoundingClientRect().top);
+          if (!lines.has(key)) lines.set(key, 0);
+          lines.set(key, lines.get(key) + 1);
+        }
+        return [...lines.entries()].sort((a, b) => a[0] - b[0]).map(([, count]) => count);
+      }
+
+      function fixDescriptionWidows() {
+        document.querySelectorAll(".product-card__description").forEach((el) => {
+          const raw = el.dataset.raw || el.textContent;
+          el.dataset.raw = raw;
+          el.textContent = raw;
+          for (let pass = 0; pass < 4; pass += 1) {
+            const lines = textLines(el);
+            if (lines.length < 2 || lines[lines.length - 1] > 1) break;
+            const previous = el.textContent;
+            const cut = previous.lastIndexOf(" ");
+            if (cut < 0) break;
+            el.textContent = `${previous.slice(0, cut)}\u00A0${previous.slice(cut + 1)}`;
+            if (el.scrollWidth > el.clientWidth + 1) {
+              el.textContent = previous;
+              break;
+            }
+          }
+        });
+      }
+
+      function shrinkToFit() {
+        [[".product-card__title, .combo-card__title", 22], [".compact-row__name", 12],
+         [".order-card__title", 9], [".order-thumb__name", 6]].forEach(([selector, minSize]) => {
+          document.querySelectorAll(selector).forEach((title) => {
+            title.style.fontSize = "";
+            let size = parseFloat(getComputedStyle(title).fontSize) || 0;
+            if (!size) return;
+            let guard = 0;
+            while (title.scrollWidth > title.clientWidth && size > minSize && guard < 90) {
+              size -= 1;
+              title.style.fontSize = `${size}px`;
+              guard += 1;
+            }
+          });
+        });
+      }
+
+      function renderLanguage() {
+        const activeComboPeriod = document.querySelector("[data-combo-period].is-active")?.dataset.comboPeriod || "pranzo";
+        updateStaticLabels();
+        renderComboMenus(activeComboPeriod);
+        renderMenu();
+        renderAllergenPage();
+        updateCartUI();
+        setupCategoryTracking();
+        shrinkToFit();
+        fixDescriptionWidows();
+        updateScrollState();
+      }
+
+      function setLanguage(language) {
+        currentLanguage = language === "en" ? "en" : "it";
+        localStorage.setItem(languageStorageKey, currentLanguage);
+        renderLanguage();
+      }
+
+      function updateProductActions() {
+        products.forEach((product) => {
+          const actionNode = document.querySelector(`[data-actions-for="${product.id}"]`);
+          if (actionNode) actionNode.innerHTML = product.soldOut ? "" : renderQtyControl(product);
+
+          const card = document.querySelector(`.product-card[data-product-id="${product.id}"]`);
+          if (card) {
+            const qty = cartQty(product.id);
+            card.classList.toggle("is-in-cart", qty > 0);
+            const marked = card.querySelector("[data-product-marked]");
+            if (marked) {
+              marked.hidden = qty === 0;
+              marked.textContent = `${copy("marked")} \u00D7${qty}`;
+            }
+          }
+        });
+
+        document.querySelectorAll(".compact-row").forEach((row) => {
+          const product = productById.get(row.dataset.productId);
+          if (product) row.outerHTML = renderCompactRow(product);
+        });
+      }
+
+      function updateHeaderButton() {
+        const isOrderOpen = !orderView.hidden;
+        const isAllergenOpen = !allergenView.hidden;
+        const units = cartUnits();
+
+        if (isOrderOpen || isAllergenOpen) {
+          menuButtonLabel.textContent = copy("menu");
+          menuButton.setAttribute("aria-label", copy("menuAria"));
+          menuButton.classList.remove("is-filled");
+          orderCount.hidden = true;
+          return;
+        }
+
+        menuButtonLabel.textContent = copy("order");
+        menuButton.setAttribute("aria-label", copy("orderAria"));
+        menuButton.classList.toggle("is-filled", units > 0);
+        orderCount.textContent = units;
+        orderCount.hidden = units === 0;
+      }
+
+      function updateCartUI() {
+        updateProductActions();
+        updateComboActions();
+        updateHeaderButton();
+        if (!orderView.hidden) renderOrder();
+      }
+
+      function renderOrder() {
+        const items = cartItems();
+        const cardItems = items.filter(({ product }) => mainImage(product));
+        const textItems = items.filter(({ product }) => !mainImage(product));
+        orderGrid.innerHTML = "";
+        orderTextList.innerHTML = "";
+        emptyOrder.hidden = items.length > 0;
+
+        cardItems.forEach(({ product, qty }) => {
+          const name = productName(product);
+          const card = document.createElement("article");
+          const isComboProduct = product.category === "menu-combo";
+          card.className = `order-card${isComboProduct ? " is-combo" : ""}`;
+          card.dataset.productId = product.id;
+
+          const title = document.createElement("h2");
+          title.className = `order-card__title${productFullTitle(product).length > 10 ? " is-small" : ""}`;
+          title.textContent = productFullTitle(product);
+
+          const imageSrc = mainImage(product);
+          const media = imageSrc ? document.createElement("img") : document.createElement("div");
+          if (imageSrc) {
+            media.className = "order-card__img";
+            media.src = imageSrc;
+            media.alt = name;
+            media.loading = "lazy";
+            media.decoding = "async";
+          } else {
+            media.className = "order-card__placeholder";
+            media.textContent = categoryLabel(product.category);
+          }
+
+          const meta = document.createElement("p");
+          meta.className = "order-card__meta";
+          meta.textContent = "";
+
+          const qtyWrap = document.createElement("div");
+          qtyWrap.innerHTML = renderQtyControl(product, "order-card__qty");
+
+          const parts = [title, media, meta];
+          if (isComboProduct) {
+            parts.push(renderOrderComboThumbs(product.id));
+            parts.push(renderOrderComboRecap(product.id));
+          }
+          parts.push(qtyWrap.firstElementChild);
+          card.append(...parts);
+          orderGrid.append(card);
+        });
+
+        textItems.forEach(({ product, qty }) => {
+          const name = productName(product);
+          const row = document.createElement("article");
+          row.className = "order-text-row";
+          row.dataset.productId = product.id;
+
+          const textColumn = document.createElement("div");
+          const title = document.createElement("h2");
+          title.className = "order-text-row__name";
+          title.textContent = name;
+
+          const meta = document.createElement("p");
+          meta.className = "order-text-row__meta";
+          meta.textContent = `${categoryLabel(product.category)} / ${formatPrice(product.price)} × ${qty}`;
+
+          const controls = document.createElement("div");
+          controls.className = "order-text-control";
+          controls.innerHTML = `
+            <button class="order-text-control__remove" type="button" data-decrement="${product.id}" aria-label="${copy("remove")} ${name}">${copy("remove")}</button>
+            <button class="order-text-control__count" type="button" data-increment="${product.id}" aria-label="${copy("addMore")} ${name}">${qty}</button>
+          `;
+
+          textColumn.append(title, meta);
+          row.append(textColumn, controls);
+          orderTextList.append(row);
+        });
+
+        totalValue.textContent = formatPrice(cartTotal());
+        shrinkToFit();
+      }
+
+      function openOrderView() {
+        renderOrder();
+        menuView.hidden = true;
+        orderView.hidden = false;
+        allergenView.hidden = true;
+        floatingArrow.hidden = true;
+        updateHeaderButton();
+        updateFloatingArrow();
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+      function showOrder() {
+        if (!orderView.hidden) return;
+        orderTransition.hidden = false;
+        requestAnimationFrame(() => {
+          orderTransition.classList.add("is-active");
+        });
+        window.setTimeout(openOrderView, 420);
+        window.setTimeout(() => {
+          orderTransition.classList.remove("is-active");
+        }, 860);
+        window.setTimeout(() => {
+          orderTransition.hidden = true;
+        }, 1180);
+      }
+
+      function showMenu() {
+        orderView.hidden = true;
+        allergenView.hidden = true;
+        menuView.hidden = false;
+        floatingArrow.hidden = false;
+        updateHeaderButton();
+        updateFloatingArrow();
+        updateCategoryTracking(true);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+      function showAllergens() {
+        menuView.hidden = true;
+        orderView.hidden = true;
+        allergenView.hidden = false;
+        floatingArrow.hidden = true;
+        updateHeaderButton();
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+      function setActiveCategory(categoryId, center = false) {
+        if (!categoryId) return;
+        activeCategoryId = categoryId;
+        document.querySelectorAll(".category-link").forEach((button) => {
+          const isActive = button.dataset.scrollTarget === categoryId;
+          button.classList.toggle("is-active", isActive);
+          if (isActive && center) {
+            button.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
+          }
+        });
+      }
+
+      function currentCategoryFromScroll() {
+        const sections = categories
+          .map((category) => ({ id: category.id, section: document.querySelector(`[data-category="${category.id}"]`) }))
+          .filter((item) => item.section);
+        if (!sections.length) return "";
+
+        const railHeight = categoryRail?.offsetHeight || 0;
+        const headerHeight = document.querySelector(".menu-header")?.offsetHeight || 0;
+        const checkpoint = window.scrollY + headerHeight + railHeight + 28;
+        let current = sections[0].id;
+
+        const atBottom = Math.ceil(window.scrollY + window.innerHeight) >= document.documentElement.scrollHeight - 2;
+        if (atBottom) return sections[sections.length - 1].id;
+
+        sections.forEach(({ id, section }) => {
+          if (section.offsetTop <= checkpoint) current = id;
+        });
+
+        return current;
+      }
+
+      function updateCategoryTracking(center = false) {
+        if (menuView.hidden) return;
+        const nextCategoryId = currentCategoryFromScroll();
+        if (nextCategoryId && nextCategoryId !== activeCategoryId) {
+          setActiveCategory(nextCategoryId, center);
+        }
+      }
+
+      function setupCategoryTracking() {
+        updateCategoryTracking(false);
+      }
+
+      document.addEventListener("click", (event) => {
+        const comboPeriodButton = event.target.closest("[data-combo-period]");
+        if (comboPeriodButton) {
+          document.querySelectorAll("[data-combo-period]").forEach((button) => {
+            const isActive = button === comboPeriodButton;
+            button.classList.toggle("is-active", isActive);
+            button.setAttribute("aria-selected", String(isActive));
+          });
+          renderComboMenus(comboPeriodButton.dataset.comboPeriod);
+          return;
+        }
+
+        const comboToggle = event.target.closest("[data-combo-toggle]");
+        if (comboToggle) {
+          const card = comboToggle.closest("[data-combo-card]");
+          const detail = card?.querySelector("[data-combo-detail]");
+          if (!detail) return;
+          const isOpening = detail.hidden;
+          detail.hidden = !isOpening;
+          comboToggle.textContent = isOpening ? copy("close") : copy("chooseMenu");
+          comboToggle.classList.toggle("is-open", isOpening);
+          if (isOpening) {
+            initComboConfig(card);
+            detail.scrollIntoView({ behavior: "smooth", block: "nearest" });
+          }
+          return;
+        }
+
+        const stepDot = event.target.closest("[data-step-dot]");
+        if (stepDot) {
+          const card = stepDot.closest("[data-combo-card]");
+          if (card) setComboStep(card, Number(stepDot.dataset.stepDot));
+          return;
+        }
+
+        const skipExtras = event.target.closest("[data-skip-extras]");
+        if (skipExtras) {
+          const card = skipExtras.closest("[data-combo-card]");
+          if (!card) return;
+          card.querySelectorAll('[data-combo-extra="true"]:checked').forEach((input) => {
+            input.checked = false;
+          });
+          enforceGroupLimits(card);
+          updateComboCounters(card);
+          renderComboLiveRecap(card);
+          updateComboFinishButton(card);
+          const comboCartId = `combo-${card.dataset.comboId}`;
+          if (cartQty(comboCartId) > 0) {
+            comboSelections.set(comboCartId, readComboSelection(card));
+            saveComboSelections();
+            updateCartUI();
+          }
+          const nav = card.querySelector("[data-step-next]");
+          if (nav && !nav.disabled) nav.click();
+          return;
+        }
+
+        const stepNext = event.target.closest("[data-step-next]");
+        if (stepNext) {
+          const card = stepNext.closest("[data-combo-card]");
+          if (!card) return;
+          const cfg = comboConfigEl(card);
+          const mode = stepNext.dataset.mode || "next";
+          if (mode === "add") {
+            if (stepNext.disabled || !comboSelectionComplete(card)) return;
+            const id = `combo-${card.dataset.comboId}`;
+            comboSelections.set(id, readComboSelection(card));
+            saveComboSelections();
+            increment(id);
+          } else if (mode === "close") {
+            const detail = card.querySelector("[data-combo-detail]");
+            const toggle = card.querySelector("[data-combo-toggle]");
+            if (detail) detail.hidden = true;
+            if (toggle) { toggle.textContent = copy("chooseMenu"); toggle.classList.remove("is-open"); }
+          } else {
+            setComboStep(card, Number(cfg.dataset.step) + 1);
+          }
+          return;
+        }
+
+        const stepPrev = event.target.closest("[data-step-prev]");
+        if (stepPrev) {
+          const card = stepPrev.closest("[data-combo-card]");
+          if (card) setComboStep(card, Number(comboConfigEl(card).dataset.step) - 1);
+          return;
+        }
+
+        const addCombo = event.target.closest("[data-add-combo]");
+        if (addCombo) {
+          const card = addCombo.closest("[data-combo-card]");
+          comboSelections.set(addCombo.dataset.addCombo, readComboSelection(card));
+          saveComboSelections();
+          increment(addCombo.dataset.addCombo);
+          return;
+        }
+
+        const add = event.target.closest("[data-add]");
+        if (add) {
+          increment(add.dataset.add);
+          return;
+        }
+
+        const incrementButton = event.target.closest("[data-increment]");
+        if (incrementButton) {
+          increment(incrementButton.dataset.increment);
+          return;
+        }
+
+        const decrementButton = event.target.closest("[data-decrement]");
+        if (decrementButton) {
+          decrement(decrementButton.dataset.decrement);
+          return;
+        }
+
+      });
+
+      document.addEventListener("change", (event) => {
+        const input = event.target.closest("[data-combo-input]");
+        if (!input) return;
+        const card = input.closest("[data-combo-card]");
+        if (!card) return;
+        const groupId = input.dataset.comboGroup;
+        const max = Number(input.dataset.comboMax) || 1;
+
+        enforceGroupLimits(card);
+        updateComboCounters(card);
+        renderComboLiveRecap(card);
+        updateComboFinishButton(card);
+
+        const comboCartId = `combo-${card.dataset.comboId}`;
+        if (cartQty(comboCartId) > 0) {
+          comboSelections.set(comboCartId, readComboSelection(card));
+          saveComboSelections();
+          updateCartUI();
+        }
+      });
+
+      document.querySelectorAll("[data-scroll-target]").forEach((button) => {
+        button.addEventListener("click", () => {
+          const target = document.querySelector(`#${button.dataset.scrollTarget}`);
+          setActiveCategory(button.dataset.scrollTarget, true);
+          target?.scrollIntoView({ behavior: "smooth", block: "start" });
+        });
+      });
+
+      menuButton.addEventListener("click", () => {
+        if (menuView.hidden) showMenu();
+        else showOrder();
+      });
+
+      languageButton.addEventListener("click", () => {
+        setLanguage(currentLanguage === "en" ? "it" : "en");
+      });
+
+      openAllergensButton.addEventListener("click", showAllergens);
+      openOrderButton.addEventListener("click", showOrder);
+      backButton.addEventListener("click", showMenu);
+      backAllergensButton.addEventListener("click", showMenu);
+      clearButton.addEventListener("click", () => {
+        cart.clear();
+        comboSelections.clear();
+        saveComboSelections();
+        saveCart();
+        updateCartUI();
+      });
+
+      floatingArrow.addEventListener("click", () => {
+        floatingArrow.classList.add("is-returning");
+        window.scrollTo({ top: 0, behavior: "smooth" });
+        window.setTimeout(() => {
+          floatingArrow.classList.remove("is-returning");
+        }, 900);
+      });
+
+      function updateFloatingArrow() {
+        const floatValue = `${Math.sin(window.scrollY / 70) * 4}px`;
+        const distanceFromBottom = document.documentElement.scrollHeight - window.innerHeight - window.scrollY;
+        const firstCompact = document.querySelector(".compact-section");
+        const compactStart = firstCompact ? firstCompact.offsetTop : Number.POSITIVE_INFINITY;
+        const isNearBottom = distanceFromBottom < 460 && window.scrollY > 420;
+        const isFoodArea = window.scrollY < compactStart - window.innerHeight * 0.38;
+        const isVisible = !floatingArrow.hidden && (isFoodArea || isNearBottom);
+
+        floatingArrow.style.setProperty("--scroll-float", floatValue);
+        floatingArrow.classList.toggle("is-bottom", isNearBottom);
+        floatingArrow.classList.toggle("is-hidden", !isVisible);
+      }
+
+      function updateScrollState() {
+        updateFloatingArrow();
+        updateCategoryTracking(true);
+      }
+
+      window.addEventListener("scroll", updateScrollState, { passive: true });
+      window.addEventListener("resize", updateScrollState);
+      window.addEventListener("resize", () => {
+        shrinkToFit();
+        fixDescriptionWidows();
+      });
+      if (document.fonts && document.fonts.ready) {
+        document.fonts.ready.then(() => {
+          shrinkToFit();
+          fixDescriptionWidows();
+        });
+      }
+
+      loadCart();
+      loadComboSelections();
+      renderLanguage();
+    </script>
+  </body>
+</html>
